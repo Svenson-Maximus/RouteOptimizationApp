@@ -113,35 +113,9 @@ erDiagram
     }
 ```
 
-## Initial SQL Skeleton (DDL)
-```sql
-CREATE TABLE customers (
-  id UUID PRIMARY KEY,
-  company_index TEXT,
-  name TEXT NOT NULL,
-  is_active BOOLEAN NOT NULL DEFAULT TRUE,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
 
-CREATE TABLE customer_addresses (
-  id UUID PRIMARY KEY,
-  customer_id UUID NOT NULL REFERENCES customers(id),
-  full_address_raw TEXT,
-  street TEXT,
-  building_no TEXT,
-  postal_code TEXT,
-  city TEXT,
-  country_code TEXT DEFAULT 'CH',
-  validation_status TEXT NOT NULL DEFAULT 'needs_validation',
-  validation_source TEXT,
-  validated_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-```
 
-## Data Flow Note (Excel Upload)
+## Data Flow (Excel Upload)
 1. User uploads Excel file.
 2. `import_jobs` record is created.
 3. Each parsed line is tracked in `import_rows`.
