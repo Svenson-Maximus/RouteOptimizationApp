@@ -1,0 +1,34 @@
+﻿version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: fp2-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-fp2}
+      POSTGRES_USER: ${POSTGRES_USER:-fp2}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fp2_dev_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - fp2-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fp2}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: fp2-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  fp2-postgres-data:
