@@ -1,7 +1,6 @@
 # ADR-0002: Flyway Migration Strategy for PostgreSQL
 
 - Date: 2026-03-05
-- Status: Accepted
 - Deciders: Solution Architect (Student)
 
 ## Context
@@ -24,5 +23,5 @@ Use **Flyway** for versioned SQL migrations.
 - Reduced schema drift and manual DB edits.
 
 **Trade-off**
-- Teams must follow migration discipline (no unmanaged manual changes).
+- Must follow migration discipline (no unmanaged manual changes).
 

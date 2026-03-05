@@ -9,7 +9,6 @@
 - Use React for the frontend and Java (Spring Boot) for business services.
 - Use Python + Google OR-Tools for CVRPTW optimization.
 - Use relational PostgreSQL (AWS RDS in cloud) as the system of record.
-- Use Flyway for versioned, reproducible SQL schema migrations.
 
 
 ## Context and Problem Statement
