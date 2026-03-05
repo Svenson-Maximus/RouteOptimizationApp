@@ -3,10 +3,6 @@
 ## Purpose
 This document defines the initial relational schema for the customer import, address validation/geocoding workflow, and optimization readiness.
 
-## Modeling Principle
-- Keep customer identity separate from address lifecycle/geocoding state.
-- Treat Excel upload as traceable import jobs.
-- Allow only validated and geocoded addresses to enter optimization.
 
 ## Core Entities
 - `customers`: business identity (company/customer level)
