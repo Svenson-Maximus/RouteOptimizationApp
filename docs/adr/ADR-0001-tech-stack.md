@@ -22,6 +22,9 @@ The master focus project evolves a prior VRPTW prototype into a production-like 
 - An optimization service must solve CVRPTW (capacity + time windows) using Google OR-Tools.
 - A frontend is required for address correction and to trigger/inspect optimizations.
 
+Current implementation note:
+- Data is entered manually in the database first; automated Excel import is deferred to a later phase.
+
 **Decision question:** Which stack and architecture baseline should be used to build a production-like platform with reliable data quality and optimization workflows?
 
 ## Decision Drivers
@@ -49,7 +52,7 @@ The master focus project evolves a prior VRPTW prototype into a production-like 
 - React + Spring Boot is a common enterprise pairing and supports a layered architecture with microservices.
 - A **relational database (PostgreSQL)** matches the domain model (customers, addresses, geocodes, imports, optimization runs) and supports strong consistency and clear relationships.
 - Python is the most pragmatic choice for OR-Tools and optimization experimentation; Java services handle integration, workflows, and API management.
-- AWS provides mature managed services (RDS for PostgreSQL, ECS/Fargate for containerized services, S3 for file uploads such as Excel sources).
+- AWS provides mature managed services (RDS for PostgreSQL, ECS/Fargate for containerized services, S3 for data artifacts and integration sources).
 - Flyway provides versioned, reproducible schema evolution across local/dev/prod and enables traceable database changes.
 
 ## Architecture Scope

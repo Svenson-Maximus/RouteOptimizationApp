@@ -23,7 +23,7 @@ Monorepo for the bakery route optimization platform.
 - `legacy/thesis-code`
 
 ## Scope (MVP flow)
-1. Import Excel-based customer/delivery data into PostgreSQL.
+1. Create customer/delivery records manually in PostgreSQL (Excel import can be added later).
 2. Validate and geocode addresses with Google Maps.
 3. Correct/confirm addresses in the frontend.
 4. Run optimization only on validated + geocoded records.
