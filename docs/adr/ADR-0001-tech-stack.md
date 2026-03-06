@@ -5,7 +5,7 @@
 - **Deciders:** Solution Architect (Student), Product Owner (Bakery Owner)
 
 ## Decision Summary
-We adopt a production-like baseline stack and architecture:
+I adopt a production-like baseline stack and architecture:
 - **Architecture:** 3-layer architecture; business logic implemented as **microservices**
 - **Frontend:** React
 - **Business services:** Java (Spring Boot)
