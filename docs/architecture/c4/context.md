@@ -1,42 +1,38 @@
 ﻿# C4 - System Context
 
 ## Purpose
-Defines the system boundary, external actors, and external systems for the bakery optimization platform.
+Defines the system boundary, primary users, and external systems interacting with the bakery optimization platform.
 
-## Scope (Aligned with ADR-0001 + Thesis)
-The platform covers the full operational flow:
-1. Customer/delivery data intake and cleansing.
-2. Address validation, geolocation verification/correction in UI, and geocoding (Google Maps).
-3. Travel-time matrix generation (Google Routes API).
-4. CVRPTW optimization (Python + OR-Tools).
-5. Delivery schedule output for operations.
+## Scope
+The platform supports the operational flow from customer data onboarding to route optimization:
+
+1. Customer and delivery data import and cleansing.
+2. Address validation, geolocation verification/correction in the UI, and geocoding.
+3. Travel-time matrix retrieval from external map services.
+4. CVRPTW optimization using the optimization engine.
+5. Delivery schedule publication for bakery operations.
 
 ## System Context Diagram
 ```mermaid
 flowchart LR
-    ops[Bakery Operations Planner]
+    ops[Bakery Planner]
     drivers[Delivery Drivers]
-    system[Focus Project 2 Platform<br/>React UI + Spring Services + Python Optimization Engine]
-    maps[Google Maps Platform<br/>Geocoding API + Routes API Compute Route Matrix]
-    db[(PostgreSQL<br/>System of Record)]
-    files[(Excel Sources<br/>Tourenplaene / Customer Data)]
 
-    ops -->|Maintain customers, validate addresses, verify/correct geolocations, trigger optimization| system
-    files -->|Input data for import/cleanup| system
+    system[Focus Project 2 Platform]
 
-    system -->|Address validation/geocoding requests| maps
-    maps -->|Place IDs + normalized addresses + coordinates| system
+    files[Excel Sources<br/>Tourenplaene / Customer Data]
+    maps[Google Maps Platform<br/>Geocoding API + Routes API]
 
-    system -->|Route matrix requests place IDs as origins/destinations| maps
-    maps -->|Travel-time / distance matrix| system
-
-    system -->|Read/write customers, addresses, profiles, imports, geocode status, run metadata| db
-    system -->|Publish optimized route plan + schedule| ops
-    ops -->|Dispatch route plan| drivers
+    ops -->|Maintains customers, validates addresses, verifies/corrects geolocations, triggers optimization| system
+    files -->|Provides import data| system
+    system -->|Requests geocoding and route matrices| maps
+    maps -->|Returns place IDs, normalized addresses, coordinates, travel-time matrix| system
+    system -->|Publishes optimized route plan and schedule| ops
+    ops -->|Dispatches route plan| drivers
 ```
 
 ## Actors and External Systems
-- `Bakery Operations Planner`: Maintains data, verifies/corrects geolocations in UI, launches optimization runs, and reviews results.
+- `Bakery Planner`: Maintains data, verifies/corrects geolocations in UI, launches optimization runs, and reviews results.
 - `Delivery Drivers`: Consume finalized route plans from operations.
 - `Google Maps Platform`: External provider for geocoding and route-matrix travel times.
 - `PostgreSQL`: Persistent store for customer/address/delivery/import/geocoding/optimization data.
