@@ -1,12 +1,22 @@
 ﻿# Address Validation UI
 
-React frontend for address cleanup, correction, and confirmation.
+React frontend for address cleanup, geocoding verification, and optimization readiness.
 
-## Responsibilities
-- Show addresses that need validation.
-- Trigger geocoding suggestions.
-- Allow manual correction and confirmation.
-- Trigger optimization runs and inspect run status.
+## Run
+1. `cd apps/frontend/address-validation-ui`
+2. `npm install`
+3. `npm run dev`
 
-## Deployment Target
-- Build static assets and deploy to S3 + CloudFront.
+## Current Features
+- `Customers` view: list of all customers with address and validation state.
+- `Geocoding Review` view: validation queue, geocode suggestions, and candidate confirmation.
+
+## Architecture Style
+- `domain`: domain model definitions
+- `application/usecases`: UI-facing business actions
+- `infrastructure/api`: API integration + fallback mock adapters
+- `presentation`: pages and UI components
+
+## API Integration
+By default, the UI falls back to local mock data if backend endpoints are not available.
+Use `VITE_API_BASE_URL` to point to your backend API.
