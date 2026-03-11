@@ -17,7 +17,7 @@ flowchart LR
     ops[Bakery Operations Planner]
     drivers[Delivery Drivers]
     system[Focus Project 2 Platform<br/>React UI + Spring Services + Python Optimization Engine]
-    maps[Google Maps Platform<br/>Geocoding API + Routes API (Compute Route Matrix)]
+    maps[Google Maps Platform<br/>Geocoding API + Routes API Compute Route Matrix]
     db[(PostgreSQL<br/>System of Record)]
     files[(Excel Sources<br/>Tourenplaene / Customer Data)]
 
@@ -27,7 +27,7 @@ flowchart LR
     system -->|Address validation/geocoding requests| maps
     maps -->|Place IDs + normalized addresses + coordinates| system
 
-    system -->|Route matrix requests (place IDs as origins/destinations)| maps
+    system -->|Route matrix requests place IDs as origins/destinations| maps
     maps -->|Travel-time / distance matrix| system
 
     system -->|Read/write customers, addresses, profiles, imports, geocode status, run metadata| db
