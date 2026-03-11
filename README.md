@@ -23,16 +23,11 @@ Monorepo for the bakery route optimization platform.
 - `legacy/thesis-code`
 
 ## Scope (MVP flow)
-1. Create customer/delivery records manually in PostgreSQL (Excel import can be added later).
+1. Create customer/delivery records manually in PostgreSQL
 2. Validate and geocode addresses with Google Maps.
 3. Correct/confirm addresses in the frontend.
 4. Run optimization only on validated + geocoded records.
 
-## Database Migrations (Flyway)
-- I use Flyway for versioned SQL schema changes.
-- Why: reproducible schema across local/dev/prod and full DB change history in Git.
-- Planned location: `db/migration` inside each Java service that owns schema changes.
-- Naming convention: `V1__init_schema.sql`, `V2__add_geocode_status.sql`, etc.
 
 ## Key Documents
 - `docs/adr/ADR-0001-tech-stack.md`
