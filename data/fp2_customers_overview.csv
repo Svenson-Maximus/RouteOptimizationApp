@@ -1,0 +1,93 @@
+company_index,customer_name,street,building_no,postal_code,city,country_code,full_address_raw,tour_type,requires_frozen_food,time_window_start,time_window_end,service_time_minutes,monday,tuesday,wednesday,thursday,friday,saturday,delivery_notes,duration_matrix_index,google_api_customer_id,is_active
+10129,Sarys SA Winterthurerstrasse 301,8057 Zürich,,8057,Zürich,CH,8057 Zürich,TK,t,,,,f,f,f,f,f,f,Auf Abruf,79,10129,t
+139,Dorfmarkt,Hauptstrasse 29,29,9555,Tobel,CH,"Hauptstrasse 29, Tobel",,f,04:30:00,05:15:00,,t,t,t,t,t,t,Hintereingang auf Rolliwagen,41,139,t
+178,Bio&Fair,Volkshausstrasse 22,22,9630,Wattwil,CH,"Volkshausstrasse 22, 9630 Wattwil",,f,04:57:00,09:00:00,,f,t,f,t,t,t,Beim Eingang Ladentisch,3,178,t
+179,Benu Apotheke,Witikonerstrasse 299,299,8053,Zürich,CH,"Witikonerstrasse 299, 8053Zürich",,f,06:30:00,08:00:00,,f,f,f,f,t,f,Auf der Rampe im UG > Kiste mit Deckel abdecken,52,179,t
+205,Kletterzentum Gaswerk Kohlestrasse 12b,Schlieren,,8952,Schlieren,CH,Schlieren,TK,t,,,,f,t,f,t,f,f,wenn Ortoloco geliefert wird,75,205,t
+208,Restaurant Adlisberg,Adlisbergerstrasse 75,75,8044,Zürich,CH,"Adlisbergerstrasse 75, 8044 Zürich",TK,t,,,,f,t,f,f,t,f,bei weisser Tür,30,208,t
+212,Restaurant Ziegelhütte,Hüttenkopfstrasse 70,70,8051,Zürich,CH,"Hüttenkopfstrasse 70, Zürich",,f,05:20:00,11:00:00,,f,t,t,t,t,t,"am linken Fenster beim Kellereingang, Reoturen auch dort",43,212,t
+213,Hiltl Strandbad Mythenquai 95,8002 Zürich,,8002,Zürich,CH,8002 Zürich,TK,t,,,,t,t,t,f,t,t,"Hintereingang bei der Strasse, Personen vor Ort",28,213,t
+221,Restaurant Volkshaus,Stauffacherstrassse 60,60,8004,Zürich,CH,"Stauffacherstrassse 60, Zürich",TK,t,,,,f,f,f,f,f,f,Auf Abruf,76,221,t
+227,Verein Täglichbrot,Onlineshop,,8055,Zürich,CH,"Onlineshop, Friesenbergplatz 5, Zürich",,f,06:00:00,07:00:00,,f,f,f,f,f,t,In Laden stellen,49,227,t
+229,Täglichbrot am Friesenplatz,Friesenbergplatz 5,5,8055,Zürich,CH,"Friesenbergplatz 5, Zürich",,f,06:00:00,07:00:00,,f,t,t,t,t,t,In Laden stellen,48,229,t
+237,Welschland à la Öpfelchasper,Zweierstrasse 56,56,8004,Zürich,CH,"Zweierstrasse 56, Zürich",,f,06:10:00,07:00:00,,t,t,t,t,t,t,Im Laden stellen,50,237,t
+238,Wystube Isebähnli AG,Froschaugasse 26,26,8001,Zürich,CH,"Froschaugasse 26, Zürich",TK,t,08:05:00,,,f,f,f,t,f,f,schwarze Boxe> beim Hauseingang in Korridor stellen,72,238,t
+246,Hiltl,Sihlpost Europaallee,,8004,Zürich,CH,"Sihlpost Europaallee, Freischützstrasse, Zürich",TK,t,,,,t,t,t,f,t,t,UG Garage,85,246,t
+247,Hiltl,Dachterrasse,,8001,Zürich,CH,"Dachterrasse, Zürich",TK,t,,,,t,t,t,f,t,t,Klingeln,86,247,t
+248,Hiltl,Sihlstrasse 28,28,8001,Zürich,CH,"Sihlstrasse 28, Annagasse, Zürich",TK,t,07:50:00,,,f,f,f,f,f,f,Auf Abruf,69,248,t
+249,Hiltl am See,Seestrasse 205,205,8802,Kilchberg,CH,"Seestrasse 205, 8802 Kilchberg",TK,t,,,,t,t,t,f,t,t,"Vor der Badi parkieren (Aussparung), Personen vor Ort",29,249,t
+255,Tibits Bistro,Falkenstrasse 12,12,8008,Zürich,CH,"Falkenstrasse 12, 8008 Zürich",TK,t,07:00:00,,,t,f,t,f,t,f,Anlieferung Muster oder Auslieferer Käppeli hat nichts am Lager,16,255,t
+258,Tibits Oerlikon,Tramstrasse 2,2,8050,Zürich,CH,"Tramstrasse 2, Zürich",TK,t,,,,f,f,f,f,t,t,,89,258,t
+267,Wirtschaft im Franz,Bremgartenstrasse 18,18,8003,Zürich,CH,Bremgartenstrasse 18,TK,t,07:30:00,,,t,f,f,f,f,f,TK in Keller (Kollektiv Weitblick auch dort abladen),22,267,t
+268,Der Bioladen,Altstetterstrasse 128,128,8048,Zürich,CH,"Altstetterstrasse 128, Zürich",,f,07:45:00,09:00:00,,t,t,t,t,t,t,Mit Rolli in den Laden fahren (369 Bio Hof Zug > auf Abruf dort abladen),23,268,t
+274,Co-Working,Tessinerplatz 7  8002 Zürich,,8002,Zürich,CH,Tessinerplatz 7  8002 Zürich,,f,,07:00:00,,f,f,f,f,f,f,TK im  Restaurant abgeben,27,274,t
+275,Lotti Restaurant,Werdmühleplatz 3,3,8001,Zürich,CH,"Werdmühleplatz 3, 8001 Zürich",,f,08:00:00,09:00:00,,f,t,f,f,t,f,durch Haupteinang rechts vom Restaurant mit Lift ins UG > in die Küche stellen,71,275,t
+276,West 169,Weststrasse 169,169,8003,Zürich,CH,"Weststrasse 169, Zürich",,f,07:25:00,12:00:00,,f,f,f,f,f,t,Beim Eingang links,21,276,t
+309,Bettio Comestibles,Seedammcenter,,8808,Pfäffikon SZ,CH,"Seedammcenter, Pfäffikon SZ",,f,05:40:00,08:00:00,,t,t,t,t,t,t,Beim Lieferanteneingang / Retouren beim Parkplatz,7,309,t
+310,L`Ultimo Bacio,Nordstrasse 227,227,8037,Wipkingen,CH,"Nordstrasse 227, Wipkingen",,f,07:00:00,07:00:00,,t,t,t,t,t,t,Im Laden abgeben/Retouren auf Terrasse,57,310,t
+332,Hitzberger HB,Halle Löwenstrasse/ Landesmuseum,,8001,Zürich,CH,Halle Löwenstrasse/ Landesmuseum,TK,t,,,,t,f,t,f,t,f,Ladenlokal,82,332,t
+333,Hitzberger Sihlcity,Kalanderplatz 1,1,8045,Zürich,CH,"Kalanderplatz 1, 8045 Zürich",TK,t,,,,f,f,f,f,f,f,"Garage > Anlieferung 3, Person mit Schlüssel holen > TK auf Rampe",26,333,t
+334,Hitzberger Glattzentrum,8301 Zürich,,8301,Zürich,CH,8301 Zürich,TK,t,,,,f,f,f,t,f,f,,80,334,t
+338,Hitzberger Neumarkt Oerlikon,Hofwiesenstrasse 350,350,8050,ZH,CH,"Hofwiesenstrasse 350, ZH",TK,t,,,,f,f,f,f,f,f,Leunora Islami >Durchfahrt offen,84,338,t
+340,Hitzberger Löwenstrasse 31,Zürich,,8001,Migros Gebäude,CH,"Zürich, Migros Gebäude",TK,t,,,,f,f,f,f,f,f,Paul Marzahm,83,340,t
+341,Hitzberger Hardbrücke ZH,Hardstrasse 210,210,8005,Zürich,CH,"Hardstrasse 210, Zürich",TK,t,,,,t,f,f,f,f,f,"In Lager 10 Min vorher Tel, Maschinenstrasse 13",81,341,t
+354,Theater Rigiblick,Germaniastrasse 99,99,8044,Zürich,CH,"Germaniastrasse 99, 8044 Zürich",TK,t,,,,f,f,f,f,f,f,,88,354,t
+355,LPQ,Le Pain Quotidien,,8032,Zürich,CH,"Le Pain Quotidien, Römerhofplatz 5, Zürich",,f,06:40:00,07:30:00,,t,t,t,t,t,t,"ins Restaurant stellen, TK> in Kühler stellen,(SO-TK auf Rolli in TK Boxen lassen)",54,355,t
+359,apoTHEKE Züribergstrasse 17,Zürich,,8032,Zürich,CH,Zürich,TK,t,,,,f,f,f,t,f,f,,87,359,t
+379,Ortimo AG,obere Bahnhofstrasse 58,58,8640,Rapperswil,CH,"obere Bahnhofstrasse 58, Rapperswil",,f,05:30:00,08:30:00,,t,t,t,t,t,t,geht vorne und hinten,5,379,t
+381,Café Fortuna,Dorfstrasse 12,12,9657,Unterwasser,CH,"Dorfstrasse 12, 9657 Unterwasser",TK,t,,,,f,f,f,t,f,f,"TK Ware auf Abruf, ca. alle 3 Wochen",34,381,t
+385,Alnatura Wädenswil,Oberdorfstrasse 32,32,8820,Wädenswil,CH,"Oberdorfstrasse 32, 8820 Wädenswil",SPEZ,f,,,,f,f,f,f,f,f,,38,385,t
+389,Alnatura Thalwil,Alte Landstrasse,,8800,Thalwil,CH,"Alte Landstrasse, 8800 Thalwil",SPEZ,f,,,,f,f,f,f,f,f,,37,389,t
+399,APODRO Reform Jona,Molkereistrasse 16,16,8645,Jona,CH,"Molkereistrasse 16, Jona",,f,05:25:00,08:30:00,,f,t,f,f,f,t,grosser Schlüssel für mittleres Schloss,4,399,t
+400,APODRO Reform Wiedikon,Birmensdorferstrasse 145,145,8003,Zürich,CH,Birmensdorferstrasse 145,,f,08:00:00,08:00:00,,t,t,t,t,t,t,Im Laden abgeben,25,400,t
+402,GZPK Getreidezüchtung P:Kunz,Seestrasse 6,6,8714,Feldbach,CH,"Seestrasse 6, Feldbach",,f,05:50:00,08:00:00,,f,f,f,f,f,f,Auf Abruf / Beim Eingang abgeben,8,402,t
+407,Öpfelchasper,Hardturmstrasse 171,171,8005,Zürich,CH,"Hardturmstrasse 171, Zürich",,f,05:40:00,08:00:00,,t,f,t,f,f,f,bei Türe West  im Korridor Parterre  / Badge jeweils aufladen,45,407,t
+408,Reformhaus Stockerstrasse,Stockerstrasse 38,38,8002,Zürich,CH,"Stockerstrasse 38, Zürich",,f,07:10:00,08:00:00,,t,t,t,t,t,t,Hintereingang > beim Ladeneingang auf Rolli stellen,17,408,t
+411,Fairmondo Stäfa,Bahnhofwiese 11,11,8712,Stäfa,CH,"Bahnhofwiese 11, 8712 Stäfa",,f,06:00:00,09:00:00,,t,f,t,f,f,f,vor die Türe stellen > Deckel vor Ort,9,411,t
+414,Stiftung Stöckenweid,Haus Seeblick,,8714,Feldbach,CH,"Haus Seeblick, Eggrüti 4, Feldbach",TK,t,,,,f,f,f,t,f,f,"ca. jede 3. Woche, Bei Stöckenweid Feldmeilen abgeben",33,414,t
+415,Sphères,Hardturmstrasse 66,66,8005,Zürich,CH,"Hardturmstrasse 66, Zürich",,f,07:10:00,08:00:00,,t,t,t,t,t,t,Ins Restaurant abgeben. Falls Restaurant geschlossen auf einer leeren Kiste in Gang stellen > bei geschlossenem Restaurant > ALARM,59,415,t
+417,PaRadiesLi,Lederbachweg 1,1,9620,Lichtensteig,CH,"Lederbachweg 1, 9620 Lichtensteig",,f,04:50:00,09:00:00,,f,f,t,t,f,f,In die Garage stellen > vis à vis Geschäft,1,417,t
+421,biolocal Flughafen,Tor 101,101,8058,Flughafen Kloten,CH,"Tor 101, Flughafen Kloten",TK,t,,,,f,f,f,f,t,f,über Rampe zum Laden bringen / Anlieferung 101,91,421,t
+427,Tritt-Käse,Limmatstrasse 231,231,8005,Zürich,CH,"Limmatstrasse 231, Viadukt, Zürich",,f,07:15:00,08:00:00,,t,t,t,t,t,t,In Laden stellen,60,427,t
+428,Südhang Weine,Limmatstrasse 231,231,8005,Zürich,CH,"Limmatstrasse 231, Viadukt, Zürich",,f,07:15:00,08:00:00,,f,t,f,f,f,f,Bei Tritt-Käse separat abgeben,61,428,t
+430,Babus Bakery,Löwenstrasse 1 Zürich,,8001,Zürich,CH,Löwenstrasse 1 Zürich,TK,t,07:50:00,,,f,f,f,f,f,f,"Auf Abruf 1x pro Monat, ab 6:00 Uhr > auf Anrichte stellen, TK > Keller > Kühler",68,430,t
+434,Vita Volta,Voltastrasse 40,40,8044,Fluntern Zürich,CH,"Voltastrasse 40, Fluntern Zürich",,f,06:50:00,07:00:00,,t,t,t,t,t,t,Darf nicht vor 06:50 Uhr geliefert werden > im Laden abgeben,56,434,t
+437,Altstadt Hotel,Kirchgasse 4,4,8001,Zürich,CH,"Kirchgasse 4, 8001 Zürich",,f,06:20:00,06:30:00,,t,t,t,t,t,t,In den Gang stellen,51,437,t
+444,Stöckenweid Feldmeilen,Bünishoferstrasse 295,295,8706,Meilen,CH,Bünishoferstrasse 295,TK,t,,,,f,f,f,t,f,f,"Beim Retourweg, TK Ware 1 pro Woche",32,444,t
+445,Drogerie Schwamedingerhuus,Saatlenstrasse 12,12,8051,Zürich,CH,"Saatlenstrasse 12, Zürich",,f,05:25:00,09:00:00,,t,f,t,t,f,t,Hintereingang > nach dem Gang auf Gestell stellen > mit Deckel,44,445,t
+448,Bachsermärt Albisrieden,Ginsterstrasse 1,1,8047,Albisrieden,CH,"Ginsterstrasse 1, Albisrieden",,f,07:50:00,08:00:00,,t,t,t,t,t,t,Bei Laden deponieren,24,448,t
+450,Bachsermärt Seefeld,Seefeldstrasse 29,29,8008,Zürich,CH,"Seefeldstrasse 29, 8008 Zürich",,f,06:50:00,08:00:00,,t,t,t,t,t,t,Auf die Theke oder auf Rolli stellen,14,450,t
+451,Bachsermärt Kalkbreite,Badenerstrasse 171,171,8004,Zürich,CH,"Badenerstrasse 171, Zürich",,f,07:20:00,08:00:00,,t,t,t,t,t,t,Im Laden auf Rolli des Geschäfts stellen,18,451,t
+459,BEETNUT,Lagerstrasse 16b,16b,8005,Zürich,CH,"Lagerstrasse 16b, 8005 Zürich",TK,t,,,,f,f,f,f,f,t,Auf Abruf,77,459,t
+464,EO Keller,Earlybird Food AG,,8048,Zürich,CH,"Earlybird Food AG, Aargauerstrasse 1, Zürich",,f,05:50:00,05:00:00,,t,t,t,t,f,f,Zur Rüsterei ins UG bringen,47,464,t
+465,Gamper Bar,Dienerstrasse 75,75,8004,Zürich,CH,"Dienerstrasse 75, 8004 Zürich",,f,07:35:00,16:00:00,,f,f,t,t,t,t,"Eingang 75 & 77, nicht vor 05:30 Uhr Anlieferbar",66,465,t
+466,Lindenhofkeller,Pfalzgasse 4,4,8001,Zürich,CH,"Pfalzgasse 4, Zürich",,f,07:55:00,11:30:00,,f,t,f,f,f,f,bei Gitterstabtüre links vom Eingang > geradeaus in Heizraum,70,466,t
+469,Onno GmbH,Nordstrasse 89,89,8037,Zürich,CH,"Nordstrasse 89, 8037 Zürich",,f,07:20:00,10:00:00,,t,t,t,t,t,t,Bei Café des Amis abgeben > separater Stapel,62,469,t
+471,Bar Butter,Zwinglistrasse 38,38,8004,Zürich,CH,"Zwinglistrasse 38, 8004 Zürich",TK,t,07:40:00,,,f,t,f,f,f,f,"Auf Abruf, nicht vor 05:30 Uhr Anlieferbar / Klingel drücken > Im Eingang links vor die Türe stellen",67,471,t
+473,Wild Bowls,Seefeldstrasse 25,25,8008,Zürich,CH,"Seefeldstrasse 25, 8008 Zürich",TK,t,06:55:00,,,f,t,f,f,f,f,"Auf Abruf, ca. 2x pro Monat, Hintereingang",15,473,t
+474,Bistrot à Paris,Asylstrasse 70,70,8032,Zürich,CH,"Asylstrasse 70, Zürich",,f,06:40:00,11:30:00,,t,t,t,t,t,t,im Garten beim Eingang links > mit Plastik abdecken,53,474,t
+477,Molki Stäfa,Bahnhofstrasse 22,22,8712,Stäfa,CH,"Bahnhofstrasse 22, 8712 Stäfa",,f,06:05:00,06:00:00,,t,t,t,t,t,t,in den Laden stellen,10,477,t
+478,Restaurant Spritzwerk,Proprius GmbH,,8005,Zürich,CH,"Proprius GmbH, Zollstrasse 80, Zürich",,f,07:25:00,10:00:00,,f,f,f,f,f,t,Auf Abruf / Ins Restaurant stellen,64,478,t
+479,Alnatura Stäfa,Bahnhofstrasse 8712 Stäfa,,8712,Stäfa,CH,Bahnhofstrasse 8712 Stäfa,SPEZ,f,,,,f,f,f,t,f,f,Mit Stöckenweid zusammen ohne Fortuna,35,479,t
+479-2,Alnatura Uster,Zürcherstrasse 14,14,8610,Uster,CH,"Zürcherstrasse 14, 8610 Uster",SPEZ,f,,,,f,f,f,t,f,f,Mit Stöckenweid zusammen ohne Fortuna,36,479-2,t
+481,Wild Bowls,Bleicherweg 50,50,8001,Zürich,CH,"Bleicherweg 50, 8001 Zürich",TK,t,,,,f,f,f,f,f,f,Auf Abruf,78,481,t
+484,Restaurant Beke,Bertastrasse 16,16,8003,Zürich,CH,"Bertastrasse 16, 8003 Zürich",,f,07:25:00,10:00:00,,f,f,f,f,f,t,Ware in dier Küche deponieren,19,484,t
+486,Bioladen Stöckenweid,Schulhausstrasse 18,18,8706,Meilen,CH,"Schulhausstrasse 18, 8706 Meilen",,f,06:15:00,06:30:00,,t,t,t,t,t,t,"Haupteingang,",11,486,t
+488,Restaurant Blaue Ente,Seefeldstrasse 223,223,8008,Zürich,CH,"Seefeldstrasse 223, 8008 Zürich",,f,,11:30:00,,f,t,t,t,t,t,Eingang rechts > in die Küche stellen,13,488,t
+490,Genossenschaft Ortoloco,Spreitenbacherstrasse 35,35,8953,Dietikon,CH,"Spreitenbacherstrasse 35, Dietikon",,f,10:00:00,10:00:00,,f,t,f,t,f,f,"Beim Fondlihof > durch das Scheunentor rechts zum Zentraldepot >auf den Tisch, Retouren bei der Türe / bis 10 Uhr liefern",74,490,t
+497,Chez Nous ZH GmbH,Röschlibachstrassse 79,79,8037,Zürich,CH,"Röschlibachstrassse 79, Zürich",TK,t,07:05:00,,,t,t,t,t,t,t,Auf Abruf ca. 1x im Monat,58,497,t
+498,Konsumdepot,Hardturmstrasse 269,269,8005,Zürich,CH,"Hardturmstrasse 269, 8005 Zürich",,f,05:45:00,10:00:00,,f,f,f,t,t,t,"Beim EG links hinter Glastüre, Retouren auch dort",46,498,t
+499,Weber Comestibles,Forchstrasse 199,199,8125,Zollikerberg,CH,"Forchstrasse 199, 8125 Zollikerberg",,f,09:15:00,10:00:00,,f,t,f,f,t,f,"Anlieferung über Binzstrasse, Ware und Retouren beim Eingang",31,499,t
+501,Novu Campus AG,The Circle 61,61,8058,Flughafen Kloten,CH,"The Circle 61, Anlieferung B1, Flughafen Kloten",TK,t,,,,f,f,f,f,t,f,"linke Spur nehmen,1. Einfahrt TG, PP B1, mit Lift hoch, nach rechts im Restaurant abliefern",90,501,t
+502,Prvatklinik Bethanien,Toblerstrasse 51,51,8044,Zürich,CH,"Toblerstrasse 51, 8044 Zürich",,f,06:45:00,,,t,f,t,f,f,t,Beim Lieferanteneingang Küche Türe,55,502,t
+503,MAJO,Hauptgasse 12,12,9620,Lichtensteig,CH,"Hauptgasse 12, 9620 Lichtensteig",,f,04:57:00,,,f,f,f,f,f,f,bei PaRadiesLi in die Garage stellen,2,503,t
+504,Claro Welt- und Quartierladen,Althoossteig 2,2,8046,Zürich,CH,"Althoossteig 2, 8046 Zürich",,f,05:10:00,09:00:00,,t,t,t,t,t,t,in den Laden stellen,42,504,t
+505,Naturlade Wald GmbH,Schlipfstrasse 12,12,8636,Wald,CH,"Schlipfstrasse 12, 8636 Wald",,f,05:30:00,,,f,f,f,f,f,f,Bei Ortimo abladen,6,505,t
+512,Batter by Sibille Albertin,Hildastrasse 11,11,8004,Zürich,CH,"Hildastrasse 11, Zürich",,f,,10:00:00,,f,f,f,f,f,f,Auf Abruf bei Restaurant Beke abgeben,20,512,t
+516,Lette Badi,Lettensteg 10,10,8005,Zürich (Tel 079 704 64 52 Joachim),CH,"Lettensteg 10, Zürich (Tel 079 704 64 52 Joachim)",,f,08:10:00,09:00:00,,t,f,t,f,t,t,frühstens ab 08:00 Uhr jemand vor Ort. PP bei der Brücke ca. 400m zu Fuss,73,516,t
+519,Brot Bistro & Bar Bäckeranlage,Hohlstrasse 67,67,8004,Zürich,CH,"Hohlstrasse 67, Zürich",,f,07:30:00,08:00:00,,f,t,f,f,f,f,Auf Abruf / Ins Restaurant stellen,65,519,t
+524,Café des Amis,Nordstrasse 88,88,8037,Zürich,CH,"Nordstrasse 88, 8037 Zürich",,f,07:20:00,08:00:00,,t,t,t,t,t,t,"zwischen 07:30 - 08:00 Uhr abgeben, Personen vor Ort",63,524,t
+525,Gate Gourmet Switzerland,Borddienstrasse,,8058,Zürich,CH,"Borddienstrasse, 8058 Zürich",TK,t,,,,f,f,f,f,t,f,"Bei Tor läuten und zur Rampe fahren, Ware wird entgegen genommen",92,525,t
+526,Kreisladen GmbH,Untere Heslibachstrasse 19,19,8700,Küsnacht,CH,"Untere Heslibachstrasse 19, Küsnacht",,f,,09:00:00,,f,t,f,t,f,f,in den Laden stellen,12,526,t
+87,FC Münchwilen,Weinfelderstrasse 21,21,9542,Münchwilen,CH,"Weinfelderstrasse 21, 9542 Münchwilen",SPEZ,f,,,,f,f,f,f,f,f,"schwarzer Schlüssel beim Eingang, ins Zimmer 610 Office stellen",39,87,t
+KORNHAUS-9500,Kornhaus,Sonnenhofstrasse 2,2,9500,Wil,CH,"Sonnenhofstrasse 2, 9500 Wil",,f,,,,t,f,f,f,f,f,,93,KORNHAUS-9500,t
