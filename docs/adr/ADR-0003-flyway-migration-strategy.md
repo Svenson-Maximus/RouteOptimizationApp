@@ -1,10 +1,11 @@
-# ADR-0002: Flyway Migration Strategy for PostgreSQL
+﻿# ADR-0003: Flyway Migration Strategy for PostgreSQL
 
 - Date: 2026-03-05
+- Status: Accepted
 - Deciders: Solution Architect (Student)
 
 ## Context
-The platform depends on a relational PostgreSQL schema shared across services (customers, addresses, geocodes, imports, optimization runs).  
+The platform depends on a relational PostgreSQL schema shared across services (customers, addresses, geocodes, imports, optimization runs).
 Schema changes must be repeatable and auditable across local, dev, and cloud environments.
 
 ## Decision
@@ -24,4 +25,3 @@ Use **Flyway** for versioned SQL migrations.
 
 **Trade-off**
 - Must follow migration discipline (no unmanaged manual changes).
-
