@@ -2,7 +2,7 @@
 
 - **Date:** 2026-02-17
 - **Status:** Accepted
-- **Deciders:** Solution Architect (Student), Product Owner (Bakery Owner)
+- **Deciders:** Student, Product Owner (Bakery Owner)
 
 ## Decision Summary
 I adopt a production-like baseline stack and architecture:
@@ -23,7 +23,7 @@ The master focus project evolves a prior VRPTW prototype into a production-like 
 - A frontend is required for address correction and to trigger/inspect optimizations.
 
 Current implementation note:
-- Data is entered manually in the database first; automated Excel import is deferred to a later phase.
+- Data is entered manually in the database.
 
 **Decision question:** Which stack and architecture baseline should be used to build a production-like platform with reliable data quality and optimization workflows?
 

@@ -2,7 +2,7 @@
 
 - **Date:** 2026-03-05
 - **Status:** Accepted
-- **Deciders:** Solution Architect (Student)
+- **Deciders:** Student
 
 ## Context
 The platform manages strongly related operational entities:
@@ -11,9 +11,7 @@ The platform manages strongly related operational entities:
 - geocoding results and status history
 - delivery profiles and weekday constraints
 - routing metadata
-- import jobs/rows and optimization-related records
 
-The system requires data integrity, traceability, and consistent updates across these relationships.
 
 ## Decision
 Use **PostgreSQL** as the primary system of record with a **relational data model**.
@@ -23,13 +21,12 @@ Use **PostgreSQL** as the primary system of record with a **relational data mode
 - Transactional consistency for multi-table updates (for example address + geocode status updates).
 - Good fit for structured operational domain and audit-friendly workflows.
 - Mature ecosystem and operational support in local and AWS environments.
-- Supports future extensions (for example JSONB usage and PostGIS if geospatial queries become necessary).
+- Supports future extensions (for example PostGIS if geospatial queries become necessary).
 
 ## Alternatives Considered
 1. **NoSQL-only approach**
    - Rejected for this phase due to weaker relational guarantees and more complex consistency handling across linked entities.
-2. **Polyglot persistence from day one**
-   - Rejected for MVP due to added operational complexity and low immediate benefit.
+
 
 ## Consequences
 ### Positive
