@@ -8,11 +8,7 @@ export function Header({
     <header className="hero">
       <div className="hero-copy">
         <p className="eyebrow">Focus Project 2</p>
-        <h1>Address and Optimization Console</h1>
-        <p>
-          End-to-end workflow preview: customer verification, geocoding review, and optimization run
-          orchestration.
-        </p>
+        <h1>Bakery Optimization Platform</h1>
       </div>
 
       <div className="hero-actions">

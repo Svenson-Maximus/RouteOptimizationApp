@@ -61,7 +61,6 @@ export function OptimizationStudioPage() {
     <section>
       <div className="section-head">
         <h2>Route Planner (UI Preview)</h2>
-        <p>Future orchestration flow: configure run, trigger optimization, inspect route output.</p>
       </div>
 
       <div className="optimization-grid">

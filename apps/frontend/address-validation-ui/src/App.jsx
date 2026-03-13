@@ -20,16 +20,6 @@ export function App() {
         onToggleOptimization={() => toggleSection("route-planner")}
       />
       <main className="main-flow">
-        {!activeSection && (
-          <section className="section-hint card">
-            <h2>Workflow Modules</h2>
-            <p>
-              Start with customer quality, continue with geocoding verification, then open route planner
-              to simulate a run configuration and route output.
-            </p>
-          </section>
-        )}
-
         {activeSection === "customers" && (
           <section className="section-card">
             <CustomersPage />

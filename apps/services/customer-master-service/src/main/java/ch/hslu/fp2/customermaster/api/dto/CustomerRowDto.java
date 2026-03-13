@@ -5,10 +5,13 @@ public record CustomerRowDto(
         String companyIndex,
         String name,
         String fullAddressRaw,
+        String street,
+        String buildingNo,
         String city,
         String postalCode,
         String validationStatus,
         String tourType,
-        String routeGroup
+        String routeGroup,
+        String deliveryNotes
 ) {
 }

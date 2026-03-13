@@ -4,11 +4,14 @@
  * @property {string} companyIndex
  * @property {string} name
  * @property {string} fullAddressRaw
+ * @property {string | null} street
+ * @property {string | null} buildingNo
  * @property {string} city
  * @property {string} postalCode
  * @property {string} validationStatus
  * @property {string | null} tourType
  * @property {string | null} routeGroup
+ * @property {string | null} deliveryNotes
  */
 
 /**

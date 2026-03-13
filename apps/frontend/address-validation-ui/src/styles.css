@@ -276,6 +276,43 @@ body {
   font: inherit;
 }
 
+.edit-address {
+  margin: 0 12px 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 8px;
+}
+
+.edit-address label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  color: #1e3127;
+}
+
+.edit-address input {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px;
+  font: inherit;
+}
+
+.inline-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.secondary {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--ink);
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .toggle-row {
   display: flex !important;
   align-items: center;

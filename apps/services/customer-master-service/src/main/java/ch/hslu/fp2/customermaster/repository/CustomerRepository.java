@@ -2,6 +2,7 @@ package ch.hslu.fp2.customermaster.repository;
 
 import ch.hslu.fp2.customermaster.api.dto.CustomerRowDto;
 import ch.hslu.fp2.customermaster.api.dto.GeocodeCandidateDto;
+import ch.hslu.fp2.customermaster.api.dto.UpdateCustomerAddressRequest;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -30,11 +31,14 @@ public class CustomerRepository {
                        c.company_index                          AS company_index,
                        c.name                                   AS name,
                        COALESCE(a.full_address_raw, '')         AS full_address_raw,
+                       COALESCE(a.street, '')                   AS street,
+                       COALESCE(a.building_no, '')              AS building_no,
                        COALESCE(a.city, '')                     AS city,
                        COALESCE(a.postal_code, '')              AS postal_code,
                        COALESCE(a.validation_status, 'PENDING') AS validation_status,
                        COALESCE(dp.tour_type, '')               AS tour_type,
-                       COALESCE(dp.route_group, '')             AS route_group
+                       COALESCE(dp.route_group, '')             AS route_group,
+                       COALESCE(dp.delivery_notes, '')          AS delivery_notes
                 FROM customers c
                 JOIN customer_addresses a ON a.customer_id = c.id
                 LEFT JOIN customer_delivery_profiles dp ON dp.customer_id = c.id
@@ -46,11 +50,14 @@ public class CustomerRepository {
                 rs.getString("company_index"),
                 rs.getString("name"),
                 rs.getString("full_address_raw"),
+                blankToNull(rs.getString("street")),
+                blankToNull(rs.getString("building_no")),
                 rs.getString("city"),
                 rs.getString("postal_code"),
                 rs.getString("validation_status"),
                 blankToNull(rs.getString("tour_type")),
-                blankToNull(rs.getString("route_group"))
+                blankToNull(rs.getString("route_group")),
+                blankToNull(rs.getString("delivery_notes"))
         ));
     }
 
@@ -142,6 +149,38 @@ public class CustomerRepository {
         jdbc.update(updateAddressSql, updateParams);
     }
 
+    public CustomerRowDto updateCustomerAddress(UUID customerId, UpdateCustomerAddressRequest request) {
+        String sql = """
+                UPDATE customer_addresses
+                SET full_address_raw = :fullAddressRaw,
+                    street = :street,
+                    building_no = :buildingNo,
+                    postal_code = :postalCode,
+                    city = :city,
+                    validation_status = 'PENDING',
+                    validation_source = 'UI_ADDRESS_EDIT',
+                    validated_at = NULL,
+                    updated_at = :updatedAt
+                WHERE customer_id = :customerId
+                """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("customerId", customerId)
+                .addValue("fullAddressRaw", nullableTrim(request.fullAddressRaw()))
+                .addValue("street", nullableTrim(request.street()))
+                .addValue("buildingNo", nullableTrim(request.buildingNo()))
+                .addValue("postalCode", nullableTrim(request.postalCode()))
+                .addValue("city", nullableTrim(request.city()))
+                .addValue("updatedAt", Instant.now());
+
+        jdbc.update(sql, params);
+
+        return findAllCustomers().stream()
+                .filter(c -> customerId.toString().equals(c.id()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Customer not found after address update: " + customerId));
+    }
+
     private static String shortHash(String value) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -154,5 +193,9 @@ public class CustomerRepository {
 
     private static String blankToNull(String value) {
         return value == null || value.isBlank() ? null : value;
+    }
+
+    private static String nullableTrim(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 }

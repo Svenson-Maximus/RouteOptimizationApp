@@ -4,6 +4,7 @@ import ch.hslu.fp2.customermaster.api.dto.ConfirmGeocodeRequest;
 import ch.hslu.fp2.customermaster.api.dto.ConfirmGeocodeResponse;
 import ch.hslu.fp2.customermaster.api.dto.CustomerRowDto;
 import ch.hslu.fp2.customermaster.api.dto.GeocodeCandidateDto;
+import ch.hslu.fp2.customermaster.api.dto.UpdateCustomerAddressRequest;
 import ch.hslu.fp2.customermaster.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +43,9 @@ public class CustomerService {
 
         customerRepository.confirmGeocode(customerId, candidate);
         return new ConfirmGeocodeResponse(true, customerId.toString(), request.placeId());
+    }
+
+    public CustomerRowDto updateCustomerAddress(UUID customerId, UpdateCustomerAddressRequest request) {
+        return customerRepository.updateCustomerAddress(customerId, request);
     }
 }
