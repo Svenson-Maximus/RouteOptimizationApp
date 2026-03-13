@@ -13,7 +13,7 @@ This file captures the current implementation state so work can continue in a ne
   - `infrastructure/api`
   - `presentation`
 - UI modules (collapsed-first UX):
-  1. `Customers` (accordion cards, status + source tour labels)
+  1. `Customers` (accordion cards with validation and route metadata)
   2. `Geocoding Desk` (queue, suggest, confirm flow)
   3. `Optimization Studio` (future workflow preview UI, mock run output)
 - API base URL support via `VITE_API_BASE_URL` (default `http://localhost:8080`).
@@ -35,7 +35,6 @@ This file captures the current implementation state so work can continue in a ne
 - Corrected multiple mixed `name/address` rows.
 - Export created for manual QA:
   - `data/fp2_full_manual_review.csv`
-- Source tour labels are available from import audit JSON and exposed as `sourceSheet` in customer API.
 
 ## Important Known Gaps
 1. Geocoding suggest endpoint currently returns deterministic mock candidates (`GOOGLE_MOCK`).
@@ -80,7 +79,7 @@ docker compose -f infra/local/docker-compose.yml --env-file infra/local/.env dow
 1. Replace mock geocoding suggest with real Google Geocoding API integration in backend.
 2. Add persistent optimization run API (start run + status + summary payload) for Optimization Studio.
 3. Add backend tests for repository query mapping and geocode confirmation flow.
-4. Add UI filtering/search by source tour (`ZH1 See`/`ZH2 Stadt`) and validation status.
+4. Add UI filtering/search by validation status and route-relevant metadata.
 
 ## Last Commit
 - `c446140`

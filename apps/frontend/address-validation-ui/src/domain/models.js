@@ -8,7 +8,7 @@
  * @property {string} postalCode
  * @property {string} validationStatus
  * @property {string | null} tourType
- * @property {string | null} sourceSheet
+ * @property {string | null} routeGroup
  */
 
 /**

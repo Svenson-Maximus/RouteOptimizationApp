@@ -10,7 +10,7 @@ const MOCK_CUSTOMERS = [
     postalCode: "9555",
     validationStatus: "VALIDATED",
     tourType: null,
-    sourceSheet: "ZH2 Stadt",
+    routeGroup: "ZH2 Stadt",
   },
   {
     id: "c-2",
@@ -21,7 +21,7 @@ const MOCK_CUSTOMERS = [
     postalCode: "8640",
     validationStatus: "PENDING",
     tourType: null,
-    sourceSheet: "ZH1 See",
+    routeGroup: "ZH1 See",
   },
   {
     id: "c-3",
@@ -32,7 +32,7 @@ const MOCK_CUSTOMERS = [
     postalCode: "9500",
     validationStatus: "PENDING",
     tourType: null,
-    sourceSheet: "ZH2 Stadt",
+    routeGroup: "ZH2 Stadt",
   },
   {
     id: "c-4",
@@ -43,7 +43,7 @@ const MOCK_CUSTOMERS = [
     postalCode: "8952",
     validationStatus: "NEEDS_REVIEW",
     tourType: "TK",
-    sourceSheet: "ZH2 Stadt",
+    routeGroup: "ZH2 Stadt",
   },
 ];
 

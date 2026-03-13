@@ -2,7 +2,18 @@ import { useEffect, useMemo, useState } from "react";
 import { getAllCustomersUseCase } from "../../application/usecases/getAllCustomersUseCase";
 
 function fakeRun(config, customers) {
-  const eligible = customers.filter((c) => c.validationStatus === "VALIDATED").length;
+  const eligible = customers.filter((c) => {
+    if (c.validationStatus !== "VALIDATED") {
+      return false;
+    }
+    if (config.routeGroup !== "all" && c.routeGroup !== config.routeGroup) {
+      return false;
+    }
+    if (!config.includeTk && c.tourType === "TK") {
+      return false;
+    }
+    return true;
+  }).length;
   return {
     runId: `run-${Date.now()}`,
     objectiveValue: 25596,
@@ -26,7 +37,7 @@ export function OptimizationStudioPage() {
     vehicles: 2,
     includeTk: true,
     objective: "time_windows_first",
-    sourceTour: "all",
+    routeGroup: "all",
   });
 
   useEffect(() => {
@@ -49,7 +60,7 @@ export function OptimizationStudioPage() {
   return (
     <section>
       <div className="section-head">
-        <h2>Optimization Studio (UI Preview)</h2>
+        <h2>Route Planner (UI Preview)</h2>
         <p>Future orchestration flow: configure run, trigger optimization, inspect route output.</p>
       </div>
 
@@ -69,8 +80,8 @@ export function OptimizationStudioPage() {
           </label>
 
           <label>
-            Source Tour
-            <select value={config.sourceTour} onChange={(e) => setConfig((p) => ({ ...p, sourceTour: e.target.value }))}>
+            Route Group
+            <select value={config.routeGroup} onChange={(e) => setConfig((p) => ({ ...p, routeGroup: e.target.value }))}>
               <option value="all">All</option>
               <option value="ZH1 See">ZH1 See</option>
               <option value="ZH2 Stadt">ZH2 Stadt</option>

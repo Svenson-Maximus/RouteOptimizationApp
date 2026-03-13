@@ -8,7 +8,6 @@ Monorepo for the bakery route optimization platform.
 
 ## Repository Structure
 - `apps/frontend/address-validation-ui`
-- `apps/services/data-integration-service`
 - `apps/services/customer-master-service`
 - `apps/services/geocoding-service`
 - `apps/services/optimization-orchestrator-service`
@@ -23,7 +22,7 @@ Monorepo for the bakery route optimization platform.
 - `legacy/thesis-code`
 
 ## Scope (MVP flow)
-1. Create customer/delivery records manually in PostgreSQL
+1. Work with the existing customer and delivery dataset already stored in PostgreSQL
 2. Validate and geocode addresses with Google Maps.
 3. Correct/confirm addresses in the frontend.
 4. Run optimization only on validated + geocoded records.

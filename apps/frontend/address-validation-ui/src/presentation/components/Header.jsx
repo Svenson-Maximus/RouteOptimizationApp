@@ -1,7 +1,5 @@
 export function Header({
-  showCustomers,
-  showReview,
-  showOptimization,
+  activeSection,
   onToggleCustomers,
   onToggleReview,
   onToggleOptimization,
@@ -18,14 +16,23 @@ export function Header({
       </div>
 
       <div className="hero-actions">
-        <button className={showCustomers ? "action active" : "action"} onClick={onToggleCustomers}>
-          {showCustomers ? "Hide Customers" : "Open Customers"}
+        <button
+          className={activeSection === "customers" ? "action active" : "action"}
+          onClick={onToggleCustomers}
+        >
+          Customers
         </button>
-        <button className={showReview ? "action active" : "action"} onClick={onToggleReview}>
-          {showReview ? "Hide Geocoding Desk" : "Open Geocoding Desk"}
+        <button
+          className={activeSection === "geocoding" ? "action active" : "action"}
+          onClick={onToggleReview}
+        >
+          Geocoding Desk
         </button>
-        <button className={showOptimization ? "action active" : "action"} onClick={onToggleOptimization}>
-          {showOptimization ? "Hide Optimization" : "Open Optimization Studio"}
+        <button
+          className={activeSection === "route-planner" ? "action active" : "action"}
+          onClick={onToggleOptimization}
+        >
+          Route Planner
         </button>
       </div>
     </header>

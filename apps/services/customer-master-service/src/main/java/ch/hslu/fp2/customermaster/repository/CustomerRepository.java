@@ -34,17 +34,10 @@ public class CustomerRepository {
                        COALESCE(a.postal_code, '')              AS postal_code,
                        COALESCE(a.validation_status, 'PENDING') AS validation_status,
                        COALESCE(dp.tour_type, '')               AS tour_type,
-                       COALESCE(imp.source_sheet, '')           AS source_sheet
+                       COALESCE(dp.route_group, '')             AS route_group
                 FROM customers c
                 JOIN customer_addresses a ON a.customer_id = c.id
                 LEFT JOIN customer_delivery_profiles dp ON dp.customer_id = c.id
-                LEFT JOIN LATERAL (
-                    SELECT ir.raw_row_json->>'source_sheet' AS source_sheet
-                    FROM import_rows ir
-                    WHERE ir.customer_id = c.id
-                    ORDER BY ir.processed_at DESC NULLS LAST, ir.source_row_number DESC
-                    LIMIT 1
-                ) imp ON TRUE
                 ORDER BY c.company_index
                 """;
 
@@ -57,7 +50,7 @@ public class CustomerRepository {
                 rs.getString("postal_code"),
                 rs.getString("validation_status"),
                 blankToNull(rs.getString("tour_type")),
-                blankToNull(rs.getString("source_sheet"))
+                blankToNull(rs.getString("route_group"))
         ));
     }
 

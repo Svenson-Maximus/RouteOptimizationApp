@@ -13,8 +13,8 @@ export function CustomersPage() {
     const total = rows.length;
     const validated = rows.filter((r) => r.validationStatus === "VALIDATED").length;
     const flagged = rows.filter((r) => r.validationStatus !== "VALIDATED").length;
-    const see = rows.filter((r) => r.sourceSheet === "ZH1 See").length;
-    const stadt = rows.filter((r) => r.sourceSheet === "ZH2 Stadt").length;
+    const see = rows.filter((r) => r.routeGroup === "ZH1 See").length;
+    const stadt = rows.filter((r) => r.routeGroup === "ZH2 Stadt").length;
     return { total, validated, flagged, see, stadt };
   }, [rows]);
 
@@ -48,7 +48,7 @@ export function CustomersPage() {
               <p><span>City</span>{row.city || "-"}</p>
               <p><span>Postal Code</span>{row.postalCode || "-"}</p>
               <p><span>Tour Type</span>{row.tourType || "-"}</p>
-              <p><span>Tour Sheet</span>{row.sourceSheet || "-"}</p>
+              <p><span>Route Group</span>{row.routeGroup || "-"}</p>
             </div>
           </details>
         ))}

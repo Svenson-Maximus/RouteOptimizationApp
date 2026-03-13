@@ -17,13 +17,12 @@ I adopt a production-like baseline stack and architecture:
 ## Context and Problem Statement
 The master focus project evolves a prior VRPTW prototype into a production-like platform:
 
-- Excel-based customer/delivery input must be imported into a database.
 - Addresses must be cleaned/validated and geocoded (Google Maps).
 - An optimization service must solve CVRPTW (capacity + time windows) using Google OR-Tools.
 - A frontend is required for address correction and to trigger/inspect optimizations.
 
 Current implementation note:
-- Data is entered manually in the database.
+- The working customer dataset already exists in the database.
 
 **Decision question:** Which stack and architecture baseline should be used to build a production-like platform with reliable data quality and optimization workflows?
 
@@ -33,7 +32,7 @@ Current implementation note:
 - Cost awareness (cloud and API usage)
 - Operability (CI/CD, logging/monitoring, containerization)
 - Career alignment (Zurich market demand)
-- Data correctness and traceability (import, cleansing, geocoding auditability)
+- Data correctness and traceability (cleansing, geocoding auditability)
 
 ## Considered Options
 1. **AWS + React + PostgreSQL + Java (Spring Boot) + Python for Optimization**
@@ -50,14 +49,14 @@ Current implementation note:
 
 ### Justification
 - React + Spring Boot is a common enterprise pairing and supports a layered architecture with microservices.
-- A **relational database (PostgreSQL)** matches the domain model (customers, addresses, geocodes, imports, optimization runs) and supports strong consistency and clear relationships.
+- A **relational database (PostgreSQL)** matches the domain model (customers, addresses, geocodes, optimization runs) and supports strong consistency and clear relationships.
 - Python is the most pragmatic choice for OR-Tools and optimization experimentation; Java services handle integration, workflows, and API management.
-- AWS provides mature managed services (RDS for PostgreSQL, ECS/Fargate for containerized services, S3 for data artifacts and integration sources).
+- AWS provides mature managed services (RDS for PostgreSQL, ECS/Fargate for containerized services, S3 for operational artifacts).
 - Flyway provides versioned, reproducible schema evolution across local/dev/prod and enables traceable database changes.
 
 ## Architecture Scope
 - **Layer 1 (Presentation):** Address validation/operations UI (React).
-- **Layer 2 (Business Logic):** Microservices for data integration, customer master, geocoding, and optimization orchestration (Spring Boot); optimization engine service (Python).
+- **Layer 2 (Business Logic):** Microservices for customer master, geocoding, and optimization orchestration (Spring Boot); optimization engine service (Python).
 - **Layer 3 (Data/Infrastructure):** PostgreSQL (RDS), Flyway migrations, object storage (S3), runtime infrastructure (ECS/Fargate).
 
 ## Consequences

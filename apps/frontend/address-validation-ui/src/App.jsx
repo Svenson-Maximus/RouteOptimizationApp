@@ -5,44 +5,44 @@ import { GeocodingReviewPage } from "./presentation/pages/GeocodingReviewPage";
 import { OptimizationStudioPage } from "./presentation/pages/OptimizationStudioPage";
 
 export function App() {
-  const [showCustomers, setShowCustomers] = useState(false);
-  const [showReview, setShowReview] = useState(false);
-  const [showOptimization, setShowOptimization] = useState(false);
+  const [activeSection, setActiveSection] = useState(null);
+
+  const toggleSection = (section) => {
+    setActiveSection((current) => (current === section ? null : section));
+  };
 
   return (
     <div className="layout">
       <Header
-        showCustomers={showCustomers}
-        showReview={showReview}
-        showOptimization={showOptimization}
-        onToggleCustomers={() => setShowCustomers((prev) => !prev)}
-        onToggleReview={() => setShowReview((prev) => !prev)}
-        onToggleOptimization={() => setShowOptimization((prev) => !prev)}
+        activeSection={activeSection}
+        onToggleCustomers={() => toggleSection("customers")}
+        onToggleReview={() => toggleSection("geocoding")}
+        onToggleOptimization={() => toggleSection("route-planner")}
       />
       <main className="main-flow">
-        {!showCustomers && !showReview && !showOptimization && (
+        {!activeSection && (
           <section className="section-hint card">
             <h2>Workflow Modules</h2>
             <p>
-              Start with customer quality, continue with geocoding verification, then open optimization studio
+              Start with customer quality, continue with geocoding verification, then open route planner
               to simulate a run configuration and route output.
             </p>
           </section>
         )}
 
-        {showCustomers && (
+        {activeSection === "customers" && (
           <section className="section-card">
             <CustomersPage />
           </section>
         )}
 
-        {showReview && (
+        {activeSection === "geocoding" && (
           <section className="section-card">
             <GeocodingReviewPage />
           </section>
         )}
 
-        {showOptimization && (
+        {activeSection === "route-planner" && (
           <section className="section-card">
             <OptimizationStudioPage />
           </section>

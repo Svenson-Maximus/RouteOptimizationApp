@@ -43,6 +43,7 @@ CREATE TABLE customer_delivery_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     customer_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
     tour_type TEXT,
+    route_group TEXT,
     time_window_start TIME,
     time_window_end TIME,
     service_time_minutes INTEGER,
@@ -66,34 +67,9 @@ CREATE TABLE customer_routing_metadata (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE import_jobs (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    source_filename TEXT,
-    source_sheet TEXT,
-    status TEXT,
-    total_rows INTEGER,
-    success_rows INTEGER,
-    failed_rows INTEGER,
-    started_at TIMESTAMPTZ,
-    finished_at TIMESTAMPTZ
-);
-
-CREATE TABLE import_rows (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    import_job_id UUID NOT NULL REFERENCES import_jobs(id) ON DELETE CASCADE,
-    source_row_number INTEGER,
-    status TEXT,
-    error_message TEXT,
-    customer_id UUID REFERENCES customers(id) ON DELETE SET NULL,
-    raw_row_json JSONB,
-    processed_at TIMESTAMPTZ
-);
-
 CREATE INDEX idx_customer_addresses_customer_id ON customer_addresses(customer_id);
 CREATE INDEX idx_customer_addresses_city_postal ON customer_addresses(city, postal_code);
 CREATE INDEX idx_customer_geocodes_address_id_created_at ON customer_geocodes(address_id, created_at DESC);
 CREATE INDEX idx_customer_geocodes_place_id ON customer_geocodes(place_id);
 CREATE INDEX idx_customer_delivery_profiles_customer_id ON customer_delivery_profiles(customer_id);
 CREATE INDEX idx_customer_routing_metadata_customer_id ON customer_routing_metadata(customer_id);
-CREATE INDEX idx_import_rows_import_job_id ON import_rows(import_job_id);
-CREATE INDEX idx_import_rows_customer_id ON import_rows(customer_id);

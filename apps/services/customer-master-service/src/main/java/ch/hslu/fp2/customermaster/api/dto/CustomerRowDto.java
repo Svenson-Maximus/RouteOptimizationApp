@@ -9,6 +9,6 @@ public record CustomerRowDto(
         String postalCode,
         String validationStatus,
         String tourType,
-        String sourceSheet
+        String routeGroup
 ) {
 }
