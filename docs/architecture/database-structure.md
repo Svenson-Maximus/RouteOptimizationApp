@@ -1,7 +1,7 @@
 ﻿# Database Structure (PostgreSQL)
 
 ## Purpose
-This document defines the initial relational schema for the fixed customer dataset, address validation/geocoding workflow, and optimization readiness.
+This document defines the initial relational schema for the fixed customer dataset, address validation/geocoding workflow, and optimization readiness for a **Capacitated Vehicle Routing Problem with Time Windows (CVRPTW)**.
 
 
 ## Core Entities
@@ -92,3 +92,4 @@ erDiagram
 ## Data Flow
 1. Team enters customer/address/delivery records directly in PostgreSQL.
 2. Address validation/geocoding updates status before optimization eligibility.
+3. Validated and geocoded records provide the operational input needed for CVRPTW optimization.

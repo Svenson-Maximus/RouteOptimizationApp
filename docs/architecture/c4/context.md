@@ -2,13 +2,14 @@
 
 ## Purpose
 Defines the system boundary, primary users, and external systems that interact with the Focus Project 2 Platform.
+The platform exists to prepare and optimize bakery deliveries as a **Capacitated Vehicle Routing Problem with Time Windows (CVRPTW)**.
 
 ## Scope
 This context view covers:
 1. Customer and delivery data already loaded into the platform database.
 2. Operational usage by bakery planning staff.
 3. External geocoding and routing-matrix dependency on Google Maps Platform.
-4. Route publication and dispatch flow to drivers.
+4. CVRPTW-based route publication and dispatch flow to drivers.
 
 ## Diagram
 Insert the Enterprise Architect exported context diagram image here.
@@ -20,7 +21,7 @@ If you export with a different filename/path, update the image link accordingly.
 ## Elements
 - `Bakery Planner` (Person): Maintains customers, validates addresses, verifies geolocations, and triggers optimization.
 - `Delivery Drivers` (Person): Receive and follow optimized delivery routes.
-- `Focus Project 2 Platform` (Software System): Bakery delivery planning and optimization platform.
+- `Focus Project 2 Platform` (Software System): Bakery delivery planning and CVRPTW optimization platform.
 - `Google Maps Platform` (External Software System): Provides geocoding and route matrix services.
 
 ## Relationships
