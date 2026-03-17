@@ -31,7 +31,6 @@ Monorepo for the bakery route optimization platform.
 ## Key Documents
 - `docs/adr/ADR-0001-tech-stack.md`
 - `docs/adr/ADR-0002-database-selection-and-data-model-strategy.md`
-- `docs/adr/ADR-0003-flyway-migration-strategy.md`
 - `docs/architecture/README.md`
 - `docs/architecture/database-structure.md`
 - `docs/runbooks/local-development.md`
