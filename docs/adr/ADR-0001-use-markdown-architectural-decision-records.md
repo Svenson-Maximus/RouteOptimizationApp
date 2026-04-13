@@ -1,8 +1,8 @@
-# ADR-0001: Use Markdown Architectural Decision Records
+# ADR-0001: Which format should be used for architectural decision records?
 
 - **Date:** 2026-03-17
 - **Status:** Accepted
-- **Deciders:** Student
+- **Deciders:** Sven Leutenegger
 
 ## Context and Problem Statement
 Architectural decisions in this project need to be documented in a way that is easy to read, maintain in Git, and keep consistent across the repository.

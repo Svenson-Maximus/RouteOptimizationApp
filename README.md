@@ -20,7 +20,6 @@ Its practical purpose is to ensure that addresses, geocodes, time windows, and r
 - `infra/aws`
 - `data/excel`
 - `docs/adr`
-- `docs/architecture`
 - `docs/runbooks`
 - `docs/thesis`
 - `legacy/thesis-code`
@@ -34,9 +33,19 @@ Its practical purpose is to ensure that addresses, geocodes, time windows, and r
 
 ## Key Documents
 - `docs/adr/ADR-0001-use-markdown-architectural-decision-records.md`
-- `docs/adr/ADR-0002-technology-and-architecture-baseline.md`
-- `docs/adr/ADR-0003-database-selection-and-data-model-strategy.md`
-- `docs/architecture/README.md`
-- `docs/architecture/database-structure.md`
+- `docs/adr/ADR-0002-high-level-application-architecture.md`
+- `docs/adr/ADR-0003-business-logic-layer-structure.md`
+- `docs/adr/ADR-0004-frontend-framework.md`
+- `docs/adr/ADR-0005-backend-runtime.md`
+- `docs/adr/ADR-0006-optimization-runtime.md`
+- `docs/adr/ADR-0007-database-system-of-record.md`
+- `docs/adr/ADR-0008-cloud-provider.md`
+- `docs/adr/ADR-0009-operational-model.md`
+- `docs/adr/ADR-0010-maps-and-routing-provider.md`
+- `docs/adr/ADR-0011-travel-time-request-timing.md`
+- `docs/adr/ADR-0012-travel-time-and-distance-storage.md`
+- `docs/adr/ADR-0013-customer-delivery-data-model.md`
+- `docs/adr/ADR-0014-vehicle-and-capacity-model.md`
+- `docs/adr/ADR-0015-cvrptw-optimization-model.md`
 - `docs/runbooks/local-development.md`
 - `docs/runbooks/aws-deployment.md`
