@@ -32,20 +32,20 @@ Its practical purpose is to ensure that addresses, geocodes, time windows, and r
 
 
 ## Key Documents
-- `docs/adr/ADR-0001-use-markdown-architectural-decision-records.md`
-- `docs/adr/ADR-0002-high-level-application-architecture.md`
-- `docs/adr/ADR-0003-business-logic-layer-structure.md`
-- `docs/adr/ADR-0004-frontend-framework.md`
-- `docs/adr/ADR-0005-backend-runtime.md`
-- `docs/adr/ADR-0006-optimization-runtime.md`
-- `docs/adr/ADR-0007-database-system-of-record.md`
-- `docs/adr/ADR-0008-cloud-provider.md`
-- `docs/adr/ADR-0009-operational-model.md`
-- `docs/adr/ADR-0010-maps-and-routing-provider.md`
-- `docs/adr/ADR-0011-travel-time-request-timing.md`
-- `docs/adr/ADR-0012-travel-time-and-distance-storage.md`
-- `docs/adr/ADR-0013-customer-delivery-data-model.md`
-- `docs/adr/ADR-0014-vehicle-and-capacity-model.md`
-- `docs/adr/ADR-0015-cvrptw-optimization-model.md`
+- `docs/adr/ADR-0001-which-format-should-be-used-for-architectural-decision-records.md`
+- `docs/adr/ADR-0002-which-high-level-application-architecture-should-be-used.md`
+- `docs/adr/ADR-0003-how-should-the-business-logic-layer-be-structured.md`
+- `docs/adr/ADR-0004-which-frontend-framework-should-be-used.md`
+- `docs/adr/ADR-0005-which-backend-runtime-should-be-used-for-business-services.md`
+- `docs/adr/ADR-0006-which-optimization-runtime-should-be-used.md`
+- `docs/adr/ADR-0007-which-database-should-be-used-as-the-system-of-record.md`
+- `docs/adr/ADR-0008-which-cloud-provider-should-be-used-for-the-target-deployment.md`
+- `docs/adr/ADR-0009-how-should-the-platform-be-operated-locally-and-in-the-cloud.md`
+- `docs/adr/ADR-0010-which-maps-and-routing-provider-should-be-used.md`
+- `docs/adr/ADR-0011-when-should-travel-times-be-requested-for-route-optimization.md`
+- `docs/adr/ADR-0012-how-should-travel-times-and-distances-be-stored.md`
+- `docs/adr/ADR-0013-how-should-customer-delivery-data-be-modeled-for-optimization.md`
+- `docs/adr/ADR-0014-how-should-vehicles-and-delivery-capacities-be-modeled.md`
+- `docs/adr/ADR-0015-how-should-the-optimization-problem-be-modeled-as-a-cvrptw.md`
 - `docs/runbooks/local-development.md`
 - `docs/runbooks/aws-deployment.md`
