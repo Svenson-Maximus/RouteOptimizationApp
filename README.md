@@ -20,6 +20,7 @@ Its practical purpose is to ensure that addresses, geocodes, time windows, and r
 - `infra/aws`
 - `data/excel`
 - `docs/adr`
+- `docs/modeling`
 - `docs/runbooks`
 - `docs/thesis`
 - `legacy/thesis-code`
@@ -47,5 +48,6 @@ Its practical purpose is to ensure that addresses, geocodes, time windows, and r
 - `docs/adr/ADR-0013-how-should-customer-delivery-data-be-modeled-for-optimization.md`
 - `docs/adr/ADR-0014-how-should-vehicles-and-delivery-capacities-be-modeled.md`
 - `docs/adr/ADR-0015-how-should-the-optimization-problem-be-modeled-as-a-cvrptw.md`
+- `docs/modeling/optimization-data-model.md`
 - `docs/runbooks/local-development.md`
 - `docs/runbooks/aws-deployment.md`
