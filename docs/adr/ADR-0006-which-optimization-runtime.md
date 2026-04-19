@@ -1,4 +1,4 @@
-# ADR-0006: Which optimization runtime should be used?
+# ADR-0006: Which optimization runtime?
 
 - **Date:** 2026-04-14
 - **Status:** Accepted
@@ -27,6 +27,8 @@ Chosen option: **Python with Google OR-Tools**.
 - Existing legacy optimization scripts are already written in Python.
 - Keeping the optimizer separate from business services allows the optimization model to evolve independently.
 - A custom solver would add unnecessary algorithmic risk for the project scope.
+- Java with OR-Tools was not selected because the existing optimization examples and legacy scripts are Python-based.
+- A commercial solver was not selected because it would add licensing and integration overhead that is not needed for the project scope.
 
 ## Consequences
 ### Good

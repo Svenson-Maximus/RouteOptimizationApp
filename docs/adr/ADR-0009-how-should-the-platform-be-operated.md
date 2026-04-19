@@ -1,4 +1,4 @@
-# ADR-0009: How should the platform be operated locally and in the cloud?
+# ADR-0009: How should the platform be operated?
 
 - **Date:** 2026-04-14
 - **Status:** Proposed
@@ -7,7 +7,7 @@
 ## Context and Problem Statement
 The platform must be runnable locally for development and demonstrable in a realistic cloud deployment model.
 The operational model should describe how the frontend, business services, optimizer, database, secrets, and monitoring are deployed and operated.
-How should the platform be operated locally and in the cloud?
+How should the platform be operated?
 
 ## Decision Summary
 Run the platform locally with Docker Compose and local development servers, and use a cloud deployment model based on static frontend hosting, containerized services, managed PostgreSQL, managed secrets, and centralized logging.
@@ -27,6 +27,9 @@ Chosen option: **local Docker Compose plus cloud-managed services**.
 - Containerized services map naturally to cloud container hosting.
 - A managed database reduces operational responsibility compared with running PostgreSQL manually on a virtual machine.
 - Managed secrets and logging are required for a production-like model.
+- Local-only deployment was not selected because the project also needs a target cloud operating model.
+- Cloud-only development was not selected because local development must remain possible without cloud resources.
+- A single virtual machine was not selected because it would mix frontend hosting, services, database, secrets, and logging too tightly.
 
 ## Consequences
 ### Good

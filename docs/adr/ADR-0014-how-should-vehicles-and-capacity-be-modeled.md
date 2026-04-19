@@ -1,4 +1,4 @@
-# ADR-0014: How should vehicles and delivery capacities be modeled?
+# ADR-0014: How should vehicles and capacity be modeled?
 
 - **Date:** 2026-04-14
 - **Status:** Proposed
@@ -8,7 +8,7 @@
 The optimization problem includes vehicle capacity constraints.
 The platform therefore needs a model for vehicles and customer delivery demand.
 The model should be simple enough for the project scope but explicit enough to support capacitated vehicle routing.
-How should vehicles and delivery capacities be modeled?
+How should vehicles and capacity be modeled?
 
 ## Decision Summary
 Model vehicles as explicit records with capacity values, and model customer delivery demand as demand units used by the optimizer.
@@ -28,6 +28,9 @@ Chosen option: **explicit vehicle records with capacity values**.
 - The model can support different capacities if vehicles are not identical.
 - Demand units already exist in the routing metadata concept and can be connected to vehicle capacity.
 - Keeping vehicles in the database avoids hard-coding fleet assumptions inside the optimizer.
+- Fixed vehicle count and capacity only in optimizer configuration was not selected because fleet assumptions should be visible in the data model.
+- Free-text vehicle configuration was not selected because capacity values must be structured for optimization.
+- No vehicle capacity model was not selected because the target problem is capacitated vehicle routing.
 
 ## Consequences
 ### Good

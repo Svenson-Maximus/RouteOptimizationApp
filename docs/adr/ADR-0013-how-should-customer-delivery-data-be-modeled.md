@@ -1,4 +1,4 @@
-# ADR-0013: How should customer delivery data be modeled for optimization?
+# ADR-0013: How should customer delivery data be modeled?
 
 - **Date:** 2026-04-14
 - **Status:** Proposed
@@ -7,7 +7,7 @@
 ## Context and Problem Statement
 The optimizer needs customer-related input such as address, geocode, delivery day, time window, service time, and delivery demand.
 This data must be modeled separately from basic customer identity so that operational data can be validated before optimization.
-How should customer delivery data be modeled for optimization?
+How should customer delivery data be modeled?
 
 ## Decision Summary
 Model customer identity, address/geocode data, delivery profiles, and routing metadata as separate but related relational entities.
@@ -27,6 +27,9 @@ Chosen option: **separate relational entities for customer delivery data**.
 - Separating geocode data allows raw addresses and confirmed coordinates to be tracked independently.
 - The model supports readiness checks before a customer is included in optimization.
 - The existing database structure already separates customers, addresses, geocodes, delivery profiles, and routing metadata.
+- One wide customer table was not selected because identity, address, geocoding, delivery constraints, and routing metadata change independently.
+- JSON inside the customer record was not selected because important optimization fields should remain queryable and constrained.
+- Optimizer-only CSV input files were not selected because the platform needs validated operational data before optimization.
 
 ## Consequences
 ### Good

@@ -1,4 +1,4 @@
-# ADR-0007: Which database should be used as the system of record?
+# ADR-0007: Which database?
 
 - **Date:** 2026-04-14
 - **Status:** Accepted
@@ -7,7 +7,7 @@
 ## Context and Problem Statement
 The platform manages customers, addresses, geocoding results, delivery profiles, vehicles, and optimization-related metadata.
 These entities are strongly related and must remain consistent across customer review, geocoding, and route planning workflows.
-Which database should be used as the system of record?
+Which database should be used?
 
 ## Decision Summary
 Use PostgreSQL with a relational data model as the system of record.
@@ -27,6 +27,9 @@ Chosen option: **PostgreSQL with a relational data model**.
 - Multi-table updates require transactional consistency.
 - PostgreSQL is mature, well-supported, and suitable for both local development and cloud deployment.
 - The chosen approach leaves room for future extensions such as geospatial capabilities if they become necessary.
+- MySQL or MariaDB were not selected because PostgreSQL is already used in the project and provides a strong fit for structured relational data.
+- A NoSQL document database was not selected because the domain is strongly relational and needs referential integrity.
+- File-based storage was not selected because the platform needs consistent updates and queryable operational data.
 
 ## Consequences
 ### Good

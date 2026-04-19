@@ -12,8 +12,10 @@ The platform should store travel time and distance in the same matrix entry beca
 The optimizer primarily needs `durationSeconds` for time-window constraints.
 `distanceMeters` is stored as supporting data for reporting, plausibility checks, and later cost analysis.
 
-For the project scope, the matrix is calculated once for the fixed customer dataset and stored in the database.
-Later optimization runs reuse the persisted matrix.
+For the project scope, one full matrix is calculated for the fixed customer dataset and depot.
+The matrix is treated as delivery-day independent and later optimization runs reuse the persisted matrix by selecting only the customers active on the chosen weekday.
+Google Routes API still requires a concrete `departureTime` for traffic-aware routing.
+The representative traffic timestamp is Tuesday at 04:30 Europe/Zurich, because the tour plan shows depot departure around 04:20 and first customer stops around 04:30-05:00.
 
 For 92 customers and one depot:
 
@@ -31,6 +33,8 @@ classDiagram
         +String provider
         +DateTime calculatedAt
         +DateTime departureTime
+        +String departureTimeZone
+        +String referenceWeekday
         +String travelMode
         +Integer originCount
         +Integer destinationCount
@@ -90,6 +94,8 @@ CREATE TABLE travel_matrix_runs (
     provider TEXT NOT NULL,
     calculated_at TIMESTAMPTZ NOT NULL,
     departure_time TIMESTAMPTZ,
+    departure_time_zone TEXT NOT NULL,
+    reference_weekday TEXT NOT NULL,
     travel_mode TEXT NOT NULL,
     origin_count INTEGER NOT NULL,
     destination_count INTEGER NOT NULL,

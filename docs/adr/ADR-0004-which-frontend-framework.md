@@ -1,4 +1,4 @@
-# ADR-0004: Which frontend framework should be used?
+# ADR-0004: Which frontend framework?
 
 - **Date:** 2026-04-14
 - **Status:** Accepted
@@ -27,6 +27,9 @@ Chosen option: **React**.
 - React works well with Vite for lightweight local development.
 - The existing frontend implementation already uses React.
 - React keeps the frontend independent from backend runtime decisions.
+- Angular was not selected because it adds more framework structure than the current frontend scope requires.
+- Vue was not selected because the project already uses React and there is no strong project-specific reason to switch.
+- A server-rendered Spring Boot UI was not selected because the frontend should remain independent from the backend runtime.
 
 ## Consequences
 ### Good

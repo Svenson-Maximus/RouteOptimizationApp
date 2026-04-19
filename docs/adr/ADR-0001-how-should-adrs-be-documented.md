@@ -1,4 +1,4 @@
-# ADR-0001: Which format should be used for architectural decision records?
+# ADR-0001: How should ADRs be documented?
 
 - **Date:** 2026-03-17
 - **Status:** Accepted
@@ -6,26 +6,32 @@
 
 ## Context and Problem Statement
 Architectural decisions in this project need to be documented in a way that is easy to read, maintain in Git, and keep consistent across the repository.
-Which format and structure should these records follow?
+How should ADRs be documented?
 
 ## Decision Summary
-Use Markdown Architectural Decision Records with one consistent template across the project.
+Use Nygard-inspired Markdown Architectural Decision Records with explicit considered options.
 
 ## Considered Options
-- MADR-style Markdown ADRs with a fixed structure
-- Michael Nygard's ADR template
+- Nygard-inspired Markdown ADRs with explicit considered options
+- Pure Michael Nygard ADR template
+- Full MADR-style Markdown ADR template
 - Other ADR templates
 - Formless documentation without a fixed ADR convention
 
 ## Decision Outcome
-Chosen option: **MADR-style Markdown ADRs with one fixed project template**.
+Chosen option: **Nygard-inspired Markdown ADRs with explicit considered options**.
 
 ### Justification
 - Decisions need to stay readable inside the repository without special tooling.
 - Markdown works naturally with Git, code review, and thesis documentation.
 - A fixed structure makes ADRs easier to compare and maintain over time.
-- The template is lean enough for this project and still explicit enough to capture the decision problem, alternatives, chosen outcome, and reasoning.
+- The template keeps the Nygard ADR core structure: context, decision, and consequences.
+- Explicit considered options and justification make alternatives visible for review.
+- A pure Nygard template was not selected because the project benefits from documenting alternatives more explicitly.
+- A full MADR-style template was not selected because the project only needs a compact structure.
+- Other ADR templates were not selected because they would add another convention without a clear benefit for this project.
 - Using one format across all ADRs avoids mixing documentation styles within the same project.
+- Formless documentation was not selected because it would make the decision records harder to compare and review.
 
 ## Consequences
 ### Good

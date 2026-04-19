@@ -1,4 +1,4 @@
-# ADR-0003: How should the business logic layer be structured?
+# ADR-0003: How should business logic be structured?
 
 - **Date:** 2026-04-14
 - **Status:** Accepted
@@ -7,7 +7,7 @@
 ## Context and Problem Statement
 The business logic layer must handle different responsibilities: customer master data, address validation, geocoding integration, optimization orchestration, and route optimization.
 These responsibilities have different implementation needs and can change independently.
-How should the business logic layer be structured?
+How should business logic be structured?
 
 ## Decision Summary
 Structure the business logic layer as multiple focused services instead of one single service.
@@ -27,6 +27,9 @@ Chosen option: **focused services in the business logic layer**.
 - Service boundaries make it easier to document responsibilities in architecture diagrams.
 - The approach matches the existing repository structure with customer, geocoding, orchestration, and optimization components.
 - The scope stays pragmatic because the services are focused but do not require a complex distributed platform.
+- One monolithic backend service was not selected because the Python optimizer and Java business workflows have different runtime needs.
+- Direct frontend integration with external APIs was not selected because API keys, validation, and persistence belong in backend services.
+- A fully event-driven microservice architecture was not selected because asynchronous messaging is not required for the current MVP workflow.
 
 ## Consequences
 ### Good

@@ -1,4 +1,4 @@
-# ADR-0008: Which cloud provider should be used for the target deployment?
+# ADR-0008: Which cloud provider?
 
 - **Date:** 2026-04-14
 - **Status:** Accepted
@@ -7,7 +7,7 @@
 ## Context and Problem Statement
 The platform should have a realistic target deployment model for frontend hosting, containerized services, managed database hosting, secret management, and observability.
 The selected provider should support a production-like deployment without requiring unnecessary operational complexity for the project.
-Which cloud provider should be used for the target deployment?
+Which cloud provider should be used?
 
 ## Decision Summary
 Use AWS as the target cloud provider.
@@ -28,6 +28,9 @@ Chosen option: **AWS**.
 - RDS PostgreSQL fits managed relational database hosting.
 - Secrets Manager and CloudWatch support secret handling and operational visibility.
 - The existing repository already contains an AWS infrastructure blueprint.
+- Azure was not selected because the repository and deployment notes are already aligned with AWS services.
+- Google Cloud was not selected because using Google Maps Platform does not require hosting the application on Google Cloud.
+- Local-only deployment was not selected because the project should still describe a realistic cloud target model.
 
 ## Consequences
 ### Good

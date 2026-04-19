@@ -1,4 +1,4 @@
-# ADR-0015: How should the optimization problem be modeled as a CVRPTW?
+# ADR-0015: How should CVRPTW be modeled?
 
 - **Date:** 2026-04-14
 - **Status:** Proposed
@@ -7,7 +7,7 @@
 ## Context and Problem Statement
 The platform must generate delivery routes for customers with delivery time windows and limited vehicle capacity.
 The route optimizer must combine travel times, customer delivery constraints, vehicle capacities, and customer demand.
-How should the optimization problem be modeled as a CVRPTW?
+How should CVRPTW be modeled?
 
 ## Decision Summary
 Model the route planning problem as a Capacitated Vehicle Routing Problem with Time Windows using OR-Tools.
@@ -28,6 +28,9 @@ Chosen option: **Capacitated Vehicle Routing Problem with Time Windows**.
 - Customer demand units and vehicle capacity values provide the capacity dimension.
 - OR-Tools supports combining time-window constraints and capacity constraints in one routing model.
 - Modeling the problem as CVRPTW matches the practical delivery planning problem better than a distance-only route optimization.
+- VRPTW without capacity was not selected because delivery quantities must fit into vehicles.
+- CVRP without time windows was not selected because customer delivery time windows are part of the problem.
+- Manual route planning was not selected because the project goal is algorithmic route optimization.
 
 ## Consequences
 ### Good

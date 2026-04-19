@@ -1,4 +1,4 @@
-# ADR-0002: Which high-level application architecture should be used?
+# ADR-0002: Which application architecture?
 
 - **Date:** 2026-04-14
 - **Status:** Accepted
@@ -7,7 +7,7 @@
 ## Context and Problem Statement
 The platform must support customer review, address validation, geocoding preparation, travel-time matrix handling, and route optimization.
 The system needs a structure that separates user interaction, business workflows, optimization logic, and persistent data.
-Which high-level application architecture should be used?
+Which application architecture should be used?
 
 ## Decision Summary
 Use a 3-layer architecture with a presentation layer, a business logic layer, and a data layer.
@@ -27,6 +27,9 @@ Chosen option: **3-layer architecture**.
 - The data layer can manage PostgreSQL persistence for customers, addresses, delivery profiles, vehicles, and route-planning data.
 - The structure is understandable for the project scope and clear enough for thesis documentation.
 - The architecture supports local development and later cloud deployment without changing the conceptual system structure.
+- A single monolithic application was not selected because frontend, business workflows, optimization, and persistence have different responsibilities.
+- Event-driven architecture was not selected as the primary structure because it would add unnecessary complexity for the current project scope.
+- Client-only database access was not selected because it would bypass the business logic layer and weaken validation and security boundaries.
 
 ## Consequences
 ### Good
