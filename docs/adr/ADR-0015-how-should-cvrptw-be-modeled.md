@@ -11,6 +11,7 @@ How should CVRPTW be modeled?
 
 ## Decision Summary
 Model the route planning problem as a Capacitated Vehicle Routing Problem with Time Windows using OR-Tools.
+Combine the OR-Tools time-window routing model with the OR-Tools capacity dimension model.
 
 ## Considered Options
 - Capacitated Vehicle Routing Problem with Time Windows
@@ -27,6 +28,9 @@ Chosen option: **Capacitated Vehicle Routing Problem with Time Windows**.
 - Travel-time matrix values provide the time dimension used by the optimizer.
 - Customer demand units and vehicle capacity values provide the capacity dimension.
 - OR-Tools supports combining time-window constraints and capacity constraints in one routing model.
+- The Time dimension uses the persisted duration matrix, service times, and customer time windows.
+- The Capacity dimension uses `demand_units` per customer and `capacity_units` per vehicle.
+- The initial model uses two vehicles with `capacity_units = 100` and default customer `demand_units = 1` until real delivery quantities are available.
 - Modeling the problem as CVRPTW matches the practical delivery planning problem better than a distance-only route optimization.
 - VRPTW without capacity was not selected because delivery quantities must fit into vehicles.
 - CVRP without time windows was not selected because customer delivery time windows are part of the problem.

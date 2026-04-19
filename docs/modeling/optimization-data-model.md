@@ -119,11 +119,15 @@ Google Maps Platform only provides geocoding, travel durations, and distances.
 It does not model vehicle capacity and it does not solve the CVRPTW optimization problem.
 
 Vehicle capacity and customer demand are handled by the platform and passed to OR-Tools.
+The previous thesis states that the bakery operates two vans, and the legacy OR-Tools script uses `num_vehicles = 2`.
+For the current project data model, initialize two active vehicles with `capacityUnits = 100`.
+Because real delivery quantities are not yet available, initialize each customer with `demandUnits = 1` and mark the value as a default assumption.
 
 Example:
 
 ```text
 Vehicle 1 capacity = 100 units
+Vehicle 2 capacity = 100 units
 Customer A demand = 30 units
 Customer B demand = 40 units
 Customer C demand = 50 units
@@ -178,6 +182,7 @@ classDiagram
     class CustomerRoutingMetadata {
         +UUID id
         +Integer demandUnits
+        +String demandSource
         +String routeGroup
         +Integer matrixIndex
     }
@@ -186,6 +191,7 @@ classDiagram
         +UUID id
         +String name
         +Integer capacityUnits
+        +String capacitySource
         +Boolean isActive
     }
 
@@ -226,6 +232,7 @@ CREATE TABLE vehicles (
     id UUID PRIMARY KEY,
     name TEXT NOT NULL,
     capacity_units INTEGER NOT NULL,
+    capacity_source TEXT NOT NULL,
     start_depot_id UUID NOT NULL REFERENCES depots(id),
     end_depot_id UUID NOT NULL REFERENCES depots(id),
     is_active BOOLEAN NOT NULL DEFAULT TRUE
@@ -258,9 +265,19 @@ OR-Tools uses:
 ```text
 duration matrix
 customer time windows
-customer demand units
-vehicle capacity units
+customer demand units, initially 1 per customer by default
+vehicle capacity units, initially 100 per vehicle by default
 vehicle start and end depots
+```
+
+The optimizer combines two OR-Tools modeling concepts:
+
+```text
+Time dimension:
+    duration matrix + service times + customer time windows
+
+Capacity dimension:
+    customer demandUnits + vehicle capacityUnits
 ```
 
 The two systems are connected by the persisted matrix:

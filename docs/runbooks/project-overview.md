@@ -181,6 +181,7 @@ Current route-relevant fields include:
 - frozen goods flag
 - demand units
 - duration matrix index
+- demand units, initially defaulted to `1` until real delivery quantities are available
 
 Data work already done:
 
@@ -245,7 +246,7 @@ Useful legacy assets:
 
 - Google geocoding script
 - Google route matrix script
-- OR-Tools VRPTW script
+- OR-Tools VRPTW script using two vehicles
 
 These are not yet productionized into the new service structure but can guide implementation.
 
@@ -284,6 +285,9 @@ Main modeling decisions:
 - depot and customers should be represented as route locations for matrix generation
 - vehicles should have capacity units
 - vehicles should reference start and end depots
+- the initial fleet should contain two active vehicles because the thesis documents two vans
+- initial vehicle capacity should be `100` units per vehicle until real capacities are available
+- customer demand should default to `1` demand unit until real delivery quantities are available
 
 ### Google Maps Integration
 The real Google Maps integration is still TBD.
@@ -313,6 +317,7 @@ TBD:
 - load the relevant weekday subset from the persisted full duration matrix
 - load customers with time windows, service times, and demand units
 - load vehicles with capacity units and depot start/end
+- combine the OR-Tools Time dimension with the OR-Tools Capacity dimension
 - return optimized routes, timing, dropped stops, and metrics
 - define API contract between optimization orchestrator and optimizer
 
@@ -385,6 +390,7 @@ Persisting the matrix reduces repeated API usage.
 ### Optimization Complexity
 CVRPTW is more complex than simple shortest-path routing.
 Bad input data can make the optimization infeasible or produce poor routes.
+The initial capacity values are assumptions, so they should be replaced when real delivery quantities and vehicle capacities are available.
 
 ### Scope Creep
 Live traffic, dynamic replanning, driver mobile apps, and production-grade cloud automation are outside the current core scope unless explicitly added.
