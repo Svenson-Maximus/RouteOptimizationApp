@@ -275,7 +275,6 @@ travel_matrix_runs
 travel_matrix_entries
 depots
 vehicles
-vehicle_availability
 ```
 
 Main modeling decisions:
@@ -285,6 +284,7 @@ Main modeling decisions:
 - depot and customers should be represented as route locations for matrix generation
 - vehicles should have capacity units
 - vehicles should reference start and end depots
+- both vehicles are assumed to be available on every modeled delivery day
 - the initial fleet should contain two active vehicles because the thesis documents two vans
 - initial vehicle capacity should be `100` units per vehicle until real capacities are available
 - customer demand should default to `1` demand unit until real delivery quantities are available

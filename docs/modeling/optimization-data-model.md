@@ -77,42 +77,7 @@ classDiagram
     RouteLocation "0..1" --> "1" Depot
 ```
 
-## Travel Matrix Table Sketch
-```sql
-CREATE TABLE route_locations (
-    id UUID PRIMARY KEY,
-    location_type TEXT NOT NULL,
-    customer_id UUID NULL,
-    depot_id UUID NULL,
-    name TEXT NOT NULL,
-    latitude DECIMAL(10, 7) NOT NULL,
-    longitude DECIMAL(10, 7) NOT NULL
-);
-
-CREATE TABLE travel_matrix_runs (
-    id UUID PRIMARY KEY,
-    provider TEXT NOT NULL,
-    calculated_at TIMESTAMPTZ NOT NULL,
-    departure_time TIMESTAMPTZ,
-    departure_time_zone TEXT NOT NULL,
-    reference_weekday TEXT NOT NULL,
-    travel_mode TEXT NOT NULL,
-    origin_count INTEGER NOT NULL,
-    destination_count INTEGER NOT NULL,
-    notes TEXT
-);
-
-CREATE TABLE travel_matrix_entries (
-    id UUID PRIMARY KEY,
-    matrix_run_id UUID NOT NULL REFERENCES travel_matrix_runs(id),
-    origin_location_id UUID NOT NULL REFERENCES route_locations(id),
-    destination_location_id UUID NOT NULL REFERENCES route_locations(id),
-    duration_seconds INTEGER NOT NULL,
-    distance_meters INTEGER,
-    status TEXT,
-    UNIQUE (matrix_run_id, origin_location_id, destination_location_id)
-);
-```
+The initial database tables for this model are documented separately in `docs/modeling/optimization-database-tables.md`.
 
 ## Customer, Vehicle, and Optimization Input Model
 Google Maps Platform only provides geocoding, travel durations, and distances.
@@ -121,7 +86,7 @@ It does not model vehicle capacity and it does not solve the CVRPTW optimization
 Vehicle capacity and customer demand are handled by the platform and passed to OR-Tools.
 The previous thesis states that the bakery operates two vans, and the legacy OR-Tools script uses `num_vehicles = 2`.
 For the current project data model, initialize two active vehicles with `capacityUnits = 100`.
-Because real delivery quantities are not yet available, initialize each customer with `demandUnits = 1` and mark the value as a default assumption.
+Because real delivery quantities are not yet available, initialize each customer with `demandUnits = 1`.
 
 Example:
 
@@ -138,6 +103,7 @@ Customer A + Customer B + Customer C = 120 units, not allowed
 
 A vehicle references a depot because each route must have a start location and usually an end location.
 For the bakery use case, all vehicles will usually start and end at the same bakery depot.
+Both vehicles are assumed to be available on every modeled delivery day.
 
 ## Customer and Vehicle Class Diagram
 ```mermaid
@@ -182,7 +148,6 @@ classDiagram
     class CustomerRoutingMetadata {
         +UUID id
         +Integer demandUnits
-        +String demandSource
         +String routeGroup
         +Integer matrixIndex
     }
@@ -191,15 +156,7 @@ classDiagram
         +UUID id
         +String name
         +Integer capacityUnits
-        +String capacitySource
         +Boolean isActive
-    }
-
-    class VehicleAvailability {
-        +UUID id
-        +String weekday
-        +Time availableFrom
-        +Time availableUntil
     }
 
     class Depot {
@@ -216,36 +173,9 @@ classDiagram
 
     Vehicle "many" --> "1" Depot : starts at
     Vehicle "many" --> "1" Depot : ends at
-    Vehicle "1" --> "many" VehicleAvailability
 ```
 
-## Vehicle Table Sketch
-```sql
-CREATE TABLE depots (
-    id UUID PRIMARY KEY,
-    name TEXT NOT NULL,
-    latitude DECIMAL(10, 7) NOT NULL,
-    longitude DECIMAL(10, 7) NOT NULL
-);
-
-CREATE TABLE vehicles (
-    id UUID PRIMARY KEY,
-    name TEXT NOT NULL,
-    capacity_units INTEGER NOT NULL,
-    capacity_source TEXT NOT NULL,
-    start_depot_id UUID NOT NULL REFERENCES depots(id),
-    end_depot_id UUID NOT NULL REFERENCES depots(id),
-    is_active BOOLEAN NOT NULL DEFAULT TRUE
-);
-
-CREATE TABLE vehicle_availability (
-    id UUID PRIMARY KEY,
-    vehicle_id UUID NOT NULL REFERENCES vehicles(id),
-    weekday TEXT NOT NULL,
-    available_from TIME,
-    available_until TIME
-);
-```
+The initial database tables for depots and vehicles are documented separately in `docs/modeling/optimization-database-tables.md`.
 
 ## Google Maps Platform Compatibility
 This model works with Google Maps Platform because the Routes API Compute Route Matrix works with origins and destinations.

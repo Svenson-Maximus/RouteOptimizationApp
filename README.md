@@ -49,6 +49,7 @@ Its practical purpose is to ensure that addresses, geocodes, time windows, and r
 - `docs/adr/ADR-0014-how-should-vehicles-and-capacity-be-modeled.md`
 - `docs/adr/ADR-0015-how-should-cvrptw-be-modeled.md`
 - `docs/modeling/optimization-data-model.md`
+- `docs/modeling/optimization-database-tables.md`
 - `docs/runbooks/project-overview.md`
 - `docs/runbooks/local-development.md`
 - `docs/runbooks/aws-deployment.md`
