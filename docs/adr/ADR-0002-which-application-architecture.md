@@ -12,6 +12,7 @@ Which application architecture should be used?
 ## Decision Summary
 Use a 3-layer architecture with a presentation layer, a business logic layer, and a data layer.
 Implement the business logic layer as microservices for customer master data, geocoding, optimization orchestration, and optimization execution.
+Use JavaScript/React for the frontend, Java/Spring Boot for business services, Python/OR-Tools for optimization, and SQL/Flyway for PostgreSQL schema evolution.
 
 ## Considered Options
 - 3-layer architecture with microservices in the business logic layer

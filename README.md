@@ -9,6 +9,7 @@ Its practical purpose is to ensure that addresses, geocodes, time windows, and r
 ## Architecture
 - 3-layer architecture
 - Microservices in the business logic layer
+- Programming languages and runtimes: JavaScript/React frontend, Java/Spring Boot business services, Python/OR-Tools optimization engine, SQL/Flyway PostgreSQL migrations.
 
 ## Repository Structure
 - `apps/frontend/address-validation-ui`
