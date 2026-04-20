@@ -1,4 +1,4 @@
-# ADR-0008: Which cloud provider?
+# ADR-0007: Which cloud provider?
 
 - **Date:** 2026-04-14
 - **Status:** Accepted
@@ -23,6 +23,7 @@ Chosen option: **AWS**.
 
 ### Justification
 - AWS provides mature managed services for the required deployment needs.
+- AWS has strong market value: the Stack Overflow Developer Survey 2025 lists AWS as the most used cloud platform among professional developers at 45.9%, and Synergy Research Group reported AWS as the leading cloud infrastructure provider with 28% worldwide market share in Q4 2025: https://survey.stackoverflow.co/2025/technology and https://www.srgresearch.com/articles/genai-helps-drive-quarterly-cloud-revenues-to-119-billion-as-growth-rate-jumped-yet-again-in-q4
 - S3 and CloudFront fit static frontend hosting.
 - ECS Fargate fits containerized backend and optimizer workloads.
 - RDS PostgreSQL fits managed relational database hosting.

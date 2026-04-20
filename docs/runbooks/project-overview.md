@@ -58,32 +58,18 @@ Current ADRs:
 ```text
 ADR-0001: How should ADRs be documented?
 ADR-0002: Which application architecture?
-ADR-0003: How should business logic be structured?
-ADR-0004: Which frontend framework?
-ADR-0005: Which backend runtime?
-ADR-0006: Which optimization runtime?
-ADR-0007: Which database?
-ADR-0008: Which cloud provider?
-ADR-0009: How should the platform be operated?
-ADR-0010: Which maps provider?
-ADR-0011: When should travel times be requested?
-ADR-0012: How should travel data be stored?
-ADR-0013: How should customer delivery data be modeled?
-ADR-0014: How should vehicles and capacity be modeled?
-ADR-0015: How should CVRPTW be modeled?
+ADR-0003: Which frontend framework?
+ADR-0004: Which backend runtime?
+ADR-0005: Which optimization runtime?
+ADR-0006: Which database?
+ADR-0007: Which cloud provider?
+ADR-0008: How should the platform be operated?
+ADR-0009: Which maps provider?
+ADR-0010: When should travel times be requested?
+ADR-0011: How should CVRPTW be modeled?
 ```
 
-Accepted decisions:
-
-```text
-ADR-0001 through ADR-0008
-```
-
-Proposed decisions:
-
-```text
-ADR-0009 through ADR-0015
-```
+Each ADR contains its own current status.
 
 ### Modeling Documentation
 A modeling note exists at:

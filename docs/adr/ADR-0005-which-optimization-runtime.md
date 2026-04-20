@@ -1,4 +1,4 @@
-# ADR-0006: Which optimization runtime?
+# ADR-0005: Which optimization runtime?
 
 - **Date:** 2026-04-14
 - **Status:** Accepted

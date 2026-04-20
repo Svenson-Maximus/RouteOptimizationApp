@@ -1,4 +1,4 @@
-# ADR-0009: How should the platform be operated?
+# ADR-0008: How should the platform be operated?
 
 - **Date:** 2026-04-14
 - **Status:** Proposed
@@ -23,6 +23,7 @@ Chosen option: **local Docker Compose plus cloud-managed services**.
 
 ### Justification
 - Local development remains practical because PostgreSQL and supporting infrastructure can run with Docker Compose.
+- Docker has strong market value and fits the local/cloud bridge: the Stack Overflow Developer Survey 2025 lists Docker usage among professional developers at 73.8% in the cloud development category: https://survey.stackoverflow.co/2025/technology
 - Frontend and backend services can be started independently during development.
 - Containerized services map naturally to cloud container hosting.
 - A managed database reduces operational responsibility compared with running PostgreSQL manually on a virtual machine.

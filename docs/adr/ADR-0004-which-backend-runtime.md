@@ -1,4 +1,4 @@
-# ADR-0005: Which backend runtime?
+# ADR-0004: Which backend runtime?
 
 - **Date:** 2026-04-14
 - **Status:** Accepted
@@ -23,7 +23,8 @@ Chosen option: **Java with Spring Boot**.
 
 ### Justification
 - Spring Boot is well suited for HTTP APIs, service orchestration, validation logic, and database integration.
-- Java with Spring Boot is widely used for enterprise backend services, which fits the production-like architecture goal and the Zurich job market context.
+- Java with Spring Boot has strong market value for enterprise backend work. The JetBrains State of Java 2025 report states that 78% of Java developers work on backend development and that Spring is the leading Java framework at 65% usage: https://lp.jetbrains.com/the-state-of-java-2025
+- The Stack Overflow Developer Survey 2025 also lists Java at 29.6% usage among professional developers and Spring Boot at 15.6% in the web frameworks category: https://survey.stackoverflow.co/2025/technology
 - Java provides a stable runtime for business workflows and structured application code.
 - Spring Boot works well with PostgreSQL, Flyway, and containerized deployment.
 - Separating Java business services from the Python optimizer keeps operational workflows distinct from optimization logic.

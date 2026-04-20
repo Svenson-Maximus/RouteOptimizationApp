@@ -1,4 +1,4 @@
-# ADR-0011: When should travel times be requested?
+# ADR-0010: When should travel times be requested?
 
 - **Date:** 2026-04-14
 - **Status:** Proposed
