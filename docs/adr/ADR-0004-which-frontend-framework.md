@@ -23,6 +23,7 @@ Chosen option: **React**.
 
 ### Justification
 - React fits interactive workflows such as address review, validation queues, and optimization configuration.
+- React is one of the most widely used frontend frameworks, which makes examples, libraries, documentation, and developer knowledge easy to find.
 - The component model supports a clear separation of pages, UI components, use cases, and API access.
 - React works well with Vite for lightweight local development.
 - The existing frontend implementation already uses React.

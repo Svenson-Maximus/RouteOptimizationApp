@@ -23,7 +23,7 @@ Chosen option: **Python with Google OR-Tools**.
 
 ### Justification
 - OR-Tools provides established support for vehicle routing problems, time windows, and capacity constraints.
-- Python is practical for optimization experiments and has strong data-processing support.
+- Python is widely used for optimization experiments, scripting, and data processing, which makes it practical for the route optimization engine.
 - Existing legacy optimization scripts are already written in Python.
 - Keeping the optimizer separate from business services allows the optimization model to evolve independently.
 - A custom solver would add unnecessary algorithmic risk for the project scope.

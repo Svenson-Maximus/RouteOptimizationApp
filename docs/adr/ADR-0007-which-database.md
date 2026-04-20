@@ -25,7 +25,7 @@ Chosen option: **PostgreSQL with a relational data model**.
 - The domain contains strongly related entities that benefit from foreign keys and referential integrity.
 - Customer, address, delivery profile, vehicle, and matrix data can be modeled explicitly.
 - Multi-table updates require transactional consistency.
-- PostgreSQL is mature, well-supported, and suitable for both local development and cloud deployment.
+- PostgreSQL is mature, widely used, well-supported, and suitable for both local development and cloud deployment.
 - The chosen approach leaves room for future extensions such as geospatial capabilities if they become necessary.
 - MySQL or MariaDB were not selected because PostgreSQL is already used in the project and provides a strong fit for structured relational data.
 - A NoSQL document database was not selected because the domain is strongly relational and needs referential integrity.

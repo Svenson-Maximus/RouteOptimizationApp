@@ -100,7 +100,7 @@ It documents:
 - why travel time and distance should be stored together
 - a travel matrix class diagram in Mermaid
 - customer and vehicle class diagram in Mermaid
-- table sketches for matrix runs, matrix entries, depots, vehicles, and vehicle availability
+- database tables for matrix runs, matrix entries, depots, and vehicles
 - how Google Maps Platform output connects to OR-Tools input
 
 This document is intended as preparation for later Enterprise Architect class diagrams.
@@ -265,9 +265,9 @@ The following diagrams should be recreated in Enterprise Architect:
 Use the Mermaid diagrams in `docs/modeling/optimization-data-model.md` as the basis for EA class diagrams.
 
 ### Database Extensions
-The current database schema does not yet include the full travel matrix and vehicle model.
+The initial customer-master schema includes the travel matrix and vehicle model.
 
-TBD tables:
+Included tables:
 
 ```text
 route_locations
@@ -398,10 +398,9 @@ Live traffic, dynamic replanning, driver mobile apps, and production-grade cloud
 ## Recommended Next Steps
 
 1. Create the Enterprise Architect diagrams from the ADRs and modeling notes.
-2. Add database migrations for matrix and vehicle tables.
-3. Replace mock geocoding with real Google Geocoding API integration.
-4. Implement one-time full Google route matrix calculation and persistence.
-5. Implement the OR-Tools CVRPTW optimizer using persisted matrix data.
-6. Add optimization run API and connect the frontend Optimization Studio.
-7. Add focused tests around database mapping, geocoding confirmation, and optimizer input generation.
-8. Review proposed ADRs and change their status to `Accepted` once confirmed.
+2. Replace mock geocoding with real Google Geocoding API integration.
+3. Implement one-time full Google route matrix calculation and persistence.
+4. Implement the OR-Tools CVRPTW optimizer using persisted matrix data.
+5. Add optimization run API and connect the frontend Optimization Studio.
+6. Add focused tests around database mapping, geocoding confirmation, and optimizer input generation.
+7. Review proposed ADRs and change their status to `Accepted` once confirmed.

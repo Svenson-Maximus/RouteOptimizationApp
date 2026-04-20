@@ -41,7 +41,7 @@ Chosen option: **explicit vehicle records with capacity values**.
 ### Good
 - Vehicle capacity constraints can be represented clearly.
 - The optimizer receives explicit fleet input.
-- The model can evolve if vehicle availability, vehicle type, or capacity differs.
+- The model can evolve if vehicle type or capacity differs.
 - Real capacity and delivery quantity values can replace the defaults without changing the model structure.
 
 ### Bad

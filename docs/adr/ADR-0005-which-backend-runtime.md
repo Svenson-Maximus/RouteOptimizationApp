@@ -23,6 +23,7 @@ Chosen option: **Java with Spring Boot**.
 
 ### Justification
 - Spring Boot is well suited for HTTP APIs, service orchestration, validation logic, and database integration.
+- Java with Spring Boot is widely used for enterprise backend services, which fits the production-like architecture goal and the Zurich job market context.
 - Java provides a stable runtime for business workflows and structured application code.
 - Spring Boot works well with PostgreSQL, Flyway, and containerized deployment.
 - Separating Java business services from the Python optimizer keeps operational workflows distinct from optimization logic.

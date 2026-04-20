@@ -28,7 +28,6 @@ Chosen option: **separate relational entities for customer delivery data**.
 - Time windows, delivery days, service time, and demand units belong to delivery profiles and routing metadata rather than the basic customer record.
 - `demand_units` gives the optimizer a consistent capacity input for every customer.
 - Until real delivery quantities are available, `demand_units = 1` keeps the database complete and makes the default explicit.
-- The source of the demand value should be stored so defaulted values can later be replaced by real order quantities.
 - Separating geocode data allows raw addresses and confirmed coordinates to be tracked independently.
 - The model supports readiness checks before a customer is included in optimization.
 - The existing database structure already separates customers, addresses, geocodes, delivery profiles, and routing metadata.
