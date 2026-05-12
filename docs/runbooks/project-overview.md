@@ -290,8 +290,12 @@ Project scope assumption:
 
 ```text
 Calculate one full matrix for the fixed customer dataset and depot.
-Use Tuesday at 04:30 Europe/Zurich as the representative traffic timestamp.
+Use TRAFFIC_UNAWARE for the first cost-free baseline matrix.
+Do not send a representative departure timestamp for the baseline matrix.
+Call Google Routes API Compute Route Matrix in `10 x 10` origin-destination chunks.
+Throttle requests below the Google Routes element-per-minute quota.
 Persist the matrix and reuse it for weekday-specific optimization by filtering active customers.
+Generate TRAFFIC_AWARE_OPTIMAL only later as a separate comparison matrix.
 ```
 
 ### Optimization Backend

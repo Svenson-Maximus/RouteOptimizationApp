@@ -10,6 +10,8 @@ export function CustomersPage() {
   const [editingId, setEditingId] = useState(null);
   const [draft, setDraft] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     getAllCustomersUseCase().then(setRows);
@@ -19,10 +21,44 @@ export function CustomersPage() {
     const total = rows.length;
     const validated = rows.filter((r) => r.validationStatus === "VALIDATED").length;
     const flagged = rows.filter((r) => r.validationStatus !== "VALIDATED").length;
-    const see = rows.filter((r) => r.routeGroup === "ZH1 See").length;
-    const stadt = rows.filter((r) => r.routeGroup === "ZH2 Stadt").length;
-    return { total, validated, flagged, see, stadt };
+    const locationReview = rows.filter((r) => r.needsDeliveryAddressReview).length;
+    return { total, validated, flagged, locationReview };
   }, [rows]);
+
+  const visibleRows = useMemo(() => {
+    let filteredRows = rows;
+    if (filter === "validated") {
+      filteredRows = rows.filter((r) => r.validationStatus === "VALIDATED");
+    }
+    if (filter === "open") {
+      filteredRows = rows.filter((r) => r.validationStatus !== "VALIDATED");
+    }
+    if (filter === "location-review") {
+      filteredRows = rows.filter((r) => r.needsDeliveryAddressReview);
+    }
+    const query = search.trim().toLowerCase();
+    if (!query) {
+      return filteredRows;
+    }
+    return filteredRows.filter((row) => [
+      row.companyIndex,
+      row.name,
+      row.fullAddressRaw,
+      row.street,
+      row.buildingNo,
+      row.city,
+      row.postalCode,
+      row.tourType,
+      row.deliveryNotes,
+    ].some((value) => String(value || "").toLowerCase().includes(query)));
+  }, [filter, rows, search]);
+
+  const filterLabel = {
+    all: "All customers",
+    validated: "Validated customers",
+    open: "Open flags",
+    "location-review": "Location review",
+  }[filter];
 
   const startEdit = (row) => {
     setEditingId(row.id);
@@ -52,22 +88,60 @@ export function CustomersPage() {
     }
   };
 
+  const formatTime = (value) => value?.slice(0, 5) || "-";
+  const formatWindow = (start, end) => {
+    if (!start && !end) {
+      return "-";
+    }
+    return `${formatTime(start)} - ${formatTime(end)}`;
+  };
+  const formatDays = (row) => [
+    ["Mon", row.monday],
+    ["Tue", row.tuesday],
+    ["Wed", row.wednesday],
+    ["Thu", row.thursday],
+    ["Fri", row.friday],
+    ["Sat", row.saturday],
+  ].filter(([, active]) => active).map(([label]) => label).join(", ") || "-";
+
   return (
     <section>
       <div className="section-head">
         <h2>Customer Directory</h2>
       </div>
 
-      <div className="mini-stats mini-stats-5">
-        <article><strong>{stats.total}</strong><span>Total</span></article>
-        <article><strong>{stats.validated}</strong><span>Validated</span></article>
-        <article><strong>{stats.flagged}</strong><span>Open Flags</span></article>
-        <article><strong>{stats.see}</strong><span>ZH1 See</span></article>
-        <article><strong>{stats.stadt}</strong><span>ZH2 Stadt</span></article>
+      <div className="mini-stats">
+        <button className={filter === "all" ? "stat-tile active" : "stat-tile"} type="button" onClick={() => setFilter("all")}>
+          <strong>{stats.total}</strong><span>Total</span>
+        </button>
+        <button className={filter === "validated" ? "stat-tile active" : "stat-tile"} type="button" onClick={() => setFilter("validated")}>
+          <strong>{stats.validated}</strong><span>Validated</span>
+        </button>
+        <button className={filter === "open" ? "stat-tile active" : "stat-tile"} type="button" onClick={() => setFilter("open")}>
+          <strong>{stats.flagged}</strong><span>Open Flags</span>
+        </button>
+        <button className={filter === "location-review" ? "stat-tile active" : "stat-tile"} type="button" onClick={() => setFilter("location-review")}>
+          <strong>{stats.locationReview}</strong><span>Location Review</span>
+        </button>
+      </div>
+
+      <div className="filter-bar">
+        <span>{filterLabel}: {visibleRows.length}</span>
+        <input
+          className="customer-search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search customers"
+        />
+        {filter !== "all" && (
+          <button className="secondary compact" onClick={() => setFilter("all")}>
+            Clear Filter
+          </button>
+        )}
       </div>
 
       <div className="accordion-list">
-        {rows.map((row) => (
+        {visibleRows.map((row) => (
           <details key={row.id} className="accordion-item">
             <summary>
               <div>
@@ -78,12 +152,22 @@ export function CustomersPage() {
             </summary>
             <div className="detail-grid">
               <p><span>Address</span>{row.fullAddressRaw || "-"}</p>
+              <p><span>Address Type</span>{row.addressType || "DELIVERY"}</p>
+              <p><span>Primary Delivery</span>{row.primaryDelivery ? "Yes" : "No"}</p>
+              <p>
+                <span>Delivery Location Review</span>
+                {row.needsDeliveryAddressReview ? row.deliveryAddressReviewReason || "Required" : "No"}
+              </p>
               <p><span>Street</span>{row.street || "-"}</p>
               <p><span>Building No</span>{row.buildingNo || "-"}</p>
               <p><span>City</span>{row.city || "-"}</p>
               <p><span>Postal Code</span>{row.postalCode || "-"}</p>
               <p><span>Tour Type</span>{row.tourType || "-"}</p>
-              <p><span>Route Group</span>{row.routeGroup || "-"}</p>
+              <p><span>Time Window</span>{formatWindow(row.timeWindowStart, row.timeWindowEnd)}</p>
+              <p><span>Raw Time Window</span>{formatWindow(row.rawTimeWindowStart, row.rawTimeWindowEnd)}</p>
+              <p><span>Service Time</span>{row.serviceTimeMinutes ? `${row.serviceTimeMinutes} min` : "-"}</p>
+              <p><span>Delivery Days</span>{formatDays(row)}</p>
+              <p><span>Time Window Note</span>{row.timeWindowNormalizationNote || "-"}</p>
               <p><span>Note</span>{row.deliveryNotes || "-"}</p>
             </div>
             <div className="edit-address">

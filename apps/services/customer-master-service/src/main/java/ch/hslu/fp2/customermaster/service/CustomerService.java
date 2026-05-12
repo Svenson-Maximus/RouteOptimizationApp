@@ -5,6 +5,7 @@ import ch.hslu.fp2.customermaster.api.dto.ConfirmGeocodeResponse;
 import ch.hslu.fp2.customermaster.api.dto.CustomerRowDto;
 import ch.hslu.fp2.customermaster.api.dto.GeocodeCandidateDto;
 import ch.hslu.fp2.customermaster.api.dto.UpdateCustomerAddressRequest;
+import ch.hslu.fp2.customermaster.geocoding.GeocodingClient;
 import ch.hslu.fp2.customermaster.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,11 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final GeocodingClient geocodingClient;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, GeocodingClient geocodingClient) {
         this.customerRepository = customerRepository;
+        this.geocodingClient = geocodingClient;
     }
 
     public List<CustomerRowDto> getCustomers() {
@@ -29,7 +32,11 @@ public class CustomerService {
     }
 
     public List<GeocodeCandidateDto> suggestGeocodes(UUID customerId) {
-        return customerRepository.suggestGeocodes(customerId);
+        String addressQuery = customerRepository.findGeocodingQuery(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found: " + customerId))
+                .toAddressQuery();
+
+        return geocodingClient.suggest(addressQuery);
     }
 
     public ConfirmGeocodeResponse confirmGeocode(UUID customerId, ConfirmGeocodeRequest request) {

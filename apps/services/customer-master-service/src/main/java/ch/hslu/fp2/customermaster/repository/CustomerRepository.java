@@ -7,11 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,12 +32,34 @@ public class CustomerRepository {
                        COALESCE(a.building_no, '')              AS building_no,
                        COALESCE(a.city, '')                     AS city,
                        COALESCE(a.postal_code, '')              AS postal_code,
+                       COALESCE(a.address_type, 'DELIVERY')     AS address_type,
+                       COALESCE(a.is_primary_delivery, TRUE)    AS is_primary_delivery,
+                       COALESCE(a.needs_delivery_address_review, FALSE)
+                                                                  AS needs_delivery_address_review,
+                       COALESCE(a.delivery_address_review_reason, '')
+                                                                  AS delivery_address_review_reason,
                        COALESCE(a.validation_status, 'PENDING') AS validation_status,
                        COALESCE(dp.tour_type, '')               AS tour_type,
-                       COALESCE(dp.route_group, '')             AS route_group,
+                       COALESCE(dp.time_window_start::text, '') AS time_window_start,
+                       COALESCE(dp.time_window_end::text, '')   AS time_window_end,
+                       COALESCE(dp.raw_time_window_start::text, '')
+                                                                  AS raw_time_window_start,
+                       COALESCE(dp.raw_time_window_end::text, '')
+                                                                  AS raw_time_window_end,
+                       COALESCE(dp.time_window_normalization_note, '')
+                                                                  AS time_window_normalization_note,
+                       dp.service_time_minutes                   AS service_time_minutes,
+                       COALESCE(dp.monday, FALSE)                AS monday,
+                       COALESCE(dp.tuesday, FALSE)               AS tuesday,
+                       COALESCE(dp.wednesday, FALSE)             AS wednesday,
+                       COALESCE(dp.thursday, FALSE)              AS thursday,
+                       COALESCE(dp.friday, FALSE)                AS friday,
+                       COALESCE(dp.saturday, FALSE)              AS saturday,
                        COALESCE(dp.delivery_notes, '')          AS delivery_notes
                 FROM customers c
                 JOIN customer_addresses a ON a.customer_id = c.id
+                    AND a.address_type = 'DELIVERY'
+                    AND a.is_primary_delivery = TRUE
                 LEFT JOIN customer_delivery_profiles dp ON dp.customer_id = c.id
                 ORDER BY c.company_index
                 """;
@@ -54,9 +73,24 @@ public class CustomerRepository {
                 blankToNull(rs.getString("building_no")),
                 rs.getString("city"),
                 rs.getString("postal_code"),
+                rs.getString("address_type"),
+                rs.getBoolean("is_primary_delivery"),
+                rs.getBoolean("needs_delivery_address_review"),
+                blankToNull(rs.getString("delivery_address_review_reason")),
                 rs.getString("validation_status"),
                 blankToNull(rs.getString("tour_type")),
-                blankToNull(rs.getString("route_group")),
+                blankToNull(rs.getString("time_window_start")),
+                blankToNull(rs.getString("time_window_end")),
+                blankToNull(rs.getString("raw_time_window_start")),
+                blankToNull(rs.getString("raw_time_window_end")),
+                blankToNull(rs.getString("time_window_normalization_note")),
+                rs.getObject("service_time_minutes", Integer.class),
+                rs.getBoolean("monday"),
+                rs.getBoolean("tuesday"),
+                rs.getBoolean("wednesday"),
+                rs.getBoolean("thursday"),
+                rs.getBoolean("friday"),
+                rs.getBoolean("saturday"),
                 blankToNull(rs.getString("delivery_notes"))
         ));
     }
@@ -67,35 +101,37 @@ public class CustomerRepository {
                 .toList();
     }
 
-    public List<GeocodeCandidateDto> suggestGeocodes(UUID customerId) {
+    public Optional<CustomerGeocodingQuery> findGeocodingQuery(UUID customerId) {
         String sql = """
                 SELECT c.company_index,
                        c.name,
                        COALESCE(a.full_address_raw, '') AS full_address_raw,
+                       COALESCE(a.street, '')           AS street,
+                       COALESCE(a.building_no, '')      AS building_no,
                        COALESCE(a.city, '')             AS city,
-                       COALESCE(a.postal_code, '')      AS postal_code
+                       COALESCE(a.postal_code, '')      AS postal_code,
+                       COALESCE(a.country_code, 'CH')   AS country_code
                 FROM customers c
                 JOIN customer_addresses a ON a.customer_id = c.id
+                    AND a.address_type = 'DELIVERY'
+                    AND a.is_primary_delivery = TRUE
                 WHERE c.id = :customerId
                 """;
 
-        Optional<GeocodeCandidateDto> candidate = jdbc.query(sql,
+        return jdbc.query(sql,
                         new MapSqlParameterSource("customerId", customerId),
-                        (rs, __) -> {
-                            String fullAddress = rs.getString("full_address_raw");
-                            if (fullAddress == null || fullAddress.isBlank()) {
-                                fullAddress = String.format("%s, %s %s",
-                                        rs.getString("name"),
-                                        rs.getString("postal_code"),
-                                        rs.getString("city")).trim();
-                            }
-                            String placeId = "mock-" + shortHash(fullAddress + rs.getString("company_index"));
-                            return new GeocodeCandidateDto(placeId, fullAddress, 47.3769, 8.5417, "GOOGLE_MOCK");
-                        })
+                        (rs, __) -> new CustomerGeocodingQuery(
+                                rs.getString("company_index"),
+                                rs.getString("name"),
+                                blankToNull(rs.getString("full_address_raw")),
+                                blankToNull(rs.getString("street")),
+                                blankToNull(rs.getString("building_no")),
+                                blankToNull(rs.getString("postal_code")),
+                                blankToNull(rs.getString("city")),
+                                blankToNull(rs.getString("country_code"))
+                        ))
                 .stream()
                 .findFirst();
-
-        return candidate.map(List::of).orElse(List.of());
     }
 
     public void confirmGeocode(UUID customerId, GeocodeCandidateDto candidate) {
@@ -103,6 +139,8 @@ public class CustomerRepository {
                 SELECT id
                 FROM customer_addresses
                 WHERE customer_id = :customerId
+                  AND address_type = 'DELIVERY'
+                  AND is_primary_delivery = TRUE
                 LIMIT 1
                 """;
 
@@ -128,7 +166,7 @@ public class CustomerRepository {
                 .addValue("formattedAddress", candidate.formattedAddress())
                 .addValue("latitude", candidate.latitude())
                 .addValue("longitude", candidate.longitude())
-                .addValue("createdAt", Instant.now());
+                .addValue("createdAt", nowTimestamp());
 
         jdbc.update(insertGeocodeSql, params);
 
@@ -139,12 +177,14 @@ public class CustomerRepository {
                     validated_at = :validatedAt,
                     updated_at = :updatedAt
                 WHERE customer_id = :customerId
+                  AND address_type = 'DELIVERY'
+                  AND is_primary_delivery = TRUE
                 """;
 
         MapSqlParameterSource updateParams = new MapSqlParameterSource()
                 .addValue("customerId", customerId)
-                .addValue("validatedAt", Instant.now())
-                .addValue("updatedAt", Instant.now());
+                .addValue("validatedAt", nowTimestamp())
+                .addValue("updatedAt", nowTimestamp());
 
         jdbc.update(updateAddressSql, updateParams);
     }
@@ -162,6 +202,8 @@ public class CustomerRepository {
                     validated_at = NULL,
                     updated_at = :updatedAt
                 WHERE customer_id = :customerId
+                  AND address_type = 'DELIVERY'
+                  AND is_primary_delivery = TRUE
                 """;
 
         MapSqlParameterSource params = new MapSqlParameterSource()
@@ -171,7 +213,7 @@ public class CustomerRepository {
                 .addValue("buildingNo", nullableTrim(request.buildingNo()))
                 .addValue("postalCode", nullableTrim(request.postalCode()))
                 .addValue("city", nullableTrim(request.city()))
-                .addValue("updatedAt", Instant.now());
+                .addValue("updatedAt", nowTimestamp());
 
         jdbc.update(sql, params);
 
@@ -181,21 +223,15 @@ public class CustomerRepository {
                 .orElseThrow(() -> new IllegalStateException("Customer not found after address update: " + customerId));
     }
 
-    private static String shortHash(String value) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] digest = md.digest(value.getBytes(StandardCharsets.UTF_8));
-            return HexFormat.of().formatHex(digest).substring(0, 12);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("SHA-256 unavailable", e);
-        }
-    }
-
     private static String blankToNull(String value) {
         return value == null || value.isBlank() ? null : value;
     }
 
     private static String nullableTrim(String value) {
         return value == null || value.isBlank() ? null : value.trim();
+    }
+
+    private static Timestamp nowTimestamp() {
+        return Timestamp.from(Instant.now());
     }
 }

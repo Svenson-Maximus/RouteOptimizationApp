@@ -1,3 +1,4 @@
-﻿ortools
+ortools
 pandas
 numpy
+psycopg[binary]

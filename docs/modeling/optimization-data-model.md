@@ -14,16 +14,25 @@ The optimizer primarily needs `durationSeconds` for time-window constraints.
 
 For the project scope, one full matrix is calculated for the fixed customer dataset and depot.
 The matrix is treated as delivery-day independent and later optimization runs reuse the persisted matrix by selecting only the customers active on the chosen weekday.
-Google Routes API still requires a concrete `departureTime` for traffic-aware routing.
-The representative traffic timestamp is Tuesday at 04:30 Europe/Zurich, because the tour plan shows depot departure around 04:20 and first customer stops around 04:30-05:00.
+The first full matrix uses Google Routes API's default traffic-unaware routing behavior.
+No representative `departureTime` is sent for this baseline matrix.
+This keeps the full `93 x 93` matrix in the Routes Compute Route Matrix Essentials tier.
+A later comparison run can use `TRAFFIC_AWARE_OPTIMAL` with a representative departure timestamp, but that matrix must be stored as a separate `travel_matrix_runs` record.
+Google Routes matrix requests are sent in `10 x 10` origin-destination chunks so matrix calculation can be retried safely and remains compatible with the stricter traffic-aware request size limit.
 
-For 92 customers and one depot:
+For 92 customers and one depot, the persisted non-self directed route entries are:
 
 ```text
 93 locations * 92 non-self destinations = 8,556 directed matrix entries
 ```
 
-Self-routes such as `A -> A` can be ignored or stored as zero values.
+The Google Routes API calls use rectangular chunks, so the request workload can include self-pairs:
+
+```text
+93 origins * 93 destinations = 8,649 route matrix elements
+```
+
+Self-routes such as `A -> A` can be stored as zero values or ignored by the optimizer.
 
 ## Travel Matrix Class Diagram
 ```mermaid
@@ -104,6 +113,9 @@ Customer A + Customer B + Customer C = 120 units, not allowed
 A vehicle references a depot because each route must have a start location and usually an end location.
 For the bakery use case, all vehicles will usually start and end at the same bakery depot.
 Both vehicles are assumed to be available on every modeled delivery day.
+The existing route groups from the source data are retained for review and reporting only.
+They must not partition optimization runs.
+For a selected weekday, the optimizer receives the full eligible customer set and decides how to assign stops to the two vehicles.
 
 ## Customer and Vehicle Class Diagram
 ```mermaid

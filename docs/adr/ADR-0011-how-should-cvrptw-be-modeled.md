@@ -29,8 +29,11 @@ Chosen option: **Capacitated Vehicle Routing Problem with Time Windows**.
 - Customer demand units and vehicle capacity values provide the capacity dimension.
 - OR-Tools supports combining time-window constraints and capacity constraints in one routing model.
 - The Time dimension uses the persisted duration matrix, service times, and customer time windows.
+- The first persisted matrix is a traffic-unaware baseline matrix; a later traffic-aware matrix can be selected for comparison without changing the CVRPTW model.
 - The Capacity dimension uses `demand_units` per customer and `capacity_units` per vehicle.
 - The initial model uses two vehicles with `capacity_units = 100` and default customer `demand_units = 1` until real delivery quantities are available.
+- Existing source route groups such as `ZH1 See` and `ZH2 Stadt` are not optimization constraints.
+- For each selected delivery day, the optimizer receives all eligible customers and decides how to split them across the two vehicles.
 - Modeling the problem as CVRPTW matches the practical delivery planning problem better than a distance-only route optimization.
 - VRPTW without capacity was not selected because delivery quantities must fit into vehicles.
 - CVRP without time windows was not selected because customer delivery time windows are part of the problem.
