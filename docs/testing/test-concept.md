@@ -6,8 +6,8 @@ This test concept defines the testing strategy for the Route Optimization App. I
 
 The structure is based on:
 
-- ISTQB test management principles: test planning, test strategy, test levels, risk-based testing, and iterative refinement.
-- IEEE 829-style master test plan contents: scope, test items, test approach, test environment, responsibilities, risks, deliverables, and acceptance criteria.
+- ISTQB test management principles: test planning, test strategy, test levels, risk-based testing, and iterative refinement. Source: [ISTQB Certified Tester Foundation Level syllabus](https://www.istqb.org/certifications/certified-tester-foundation-level).
+- IEEE 829-style master test plan contents: scope, test items, test approach, test environment, responsibilities, risks, deliverables, and acceptance criteria. Source: [IEEE 829-2008 Software and System Test Documentation](https://standards.ieee.org/ieee/829/3787/).
 - A pragmatic agile test concept approach: concise documentation, updated during development, with automated tests in CI where possible.
 
 The objective is to find defects early, protect the most important architecture boundaries, and provide enough evidence for project/thesis documentation without creating a large static document that is not maintained.
@@ -32,6 +32,7 @@ The test concept is aligned with the architecture decisions in the ADRs:
 - ADR-0004: Java/Spring Boot backend services
 - ADR-0005: Python with Google OR-Tools for route optimization
 - ADR-0006: PostgreSQL with Flyway migrations
+- ADR-0007: AWS as target cloud provider
 - ADR-0008: local Docker Compose plus cloud-managed services
 - ADR-0009 and ADR-0010: Google Maps Platform and persisted travel-time/distance matrix
 - ADR-0011: CVRPTW model with time windows and vehicle capacities
@@ -84,7 +85,7 @@ These items can be added later if the project scope or deployment risk increases
 
 The project uses a shift-left, risk-based, architecture-driven strategy.
 
-Shift-left means that defects should be found by fast checks before a full browser/database/system run is needed. Risk-based means the optimizer, persistence, and service contracts receive more attention than low-risk display-only behavior.
+Shift-left means that defects should be found by fast checks before a full browser/database/system run is needed. Risk-based means the optimizer, persistence, and service contracts receive more attention than low-risk display-only behavior. Source for shift-left testing: [IBM, Shift-left testing](https://www.ibm.com/think/topics/shift-left-testing).
 
 As a planning guideline, the project follows an adapted test pyramid:
 
@@ -97,15 +98,14 @@ The percentages are not strict metrics. They describe the intended balance for a
 
 ### Test Levels
 
-| Level | Purpose | Current/Planned Examples |
-|---|---|---|
-| Unit tests | Test isolated functions, classes, components, or algorithmic rules. | React formatter tests, Java DTO/service tests, Python route-time tests. |
-| Component tests | Test React components with realistic props and mocked APIs. | Customer edit form, route stop table, recent runs table. |
-| Integration tests | Test collaboration across one technical boundary. | Spring + PostgreSQL, Spring invoking optimizer, optimizer reading matrix data. |
-| Contract tests | Protect JSON/API/database contracts across languages. | React-backend response schemas, backend-optimizer result schema, migration expectations. |
-| Property tests | Check optimizer invariants over varied inputs. | Capacity never exceeded, served stops respect time windows, dropped stops are explicit. |
-| Regression tests | Preserve behavior for fixed bugs and professor-review findings. | Waiting time at arrival, dropped runs not persisted, weekday-specific demands. |
-| End-to-end tests | Prove critical user workflows through the full stack. | Edit customer, calculate route, inspect result and map. |
+| Level | Purpose | Status | Examples |
+|---|---|---|---|
+| Unit tests | Test isolated functions, classes, components, or algorithmic rules. | Implemented partly | React formatter tests, Java DTO/search-configuration test, Python route-time tests. |
+| Component tests | Test React components with realistic props and mocked APIs. | Planned | Customer edit form, route stop table, recent runs table. |
+| Integration tests | Test collaboration across one technical boundary. | Planned; test database startup exists | Spring + PostgreSQL, Spring invoking optimizer, optimizer reading matrix data. |
+| Contract tests | Protect JSON/API/database contracts across languages. | Planned; schema location exists | React-backend response schemas, backend-optimizer result schema, migration expectations. |
+| Property tests | Check optimizer invariants over varied inputs. | Planned | Capacity never exceeded, served stops respect time windows, dropped stops are explicit. |
+| End-to-end tests | Prove critical user workflows through the full stack. | Planned | Edit customer, calculate route, inspect result and map. |
 
 ## 5. Test Design Techniques
 
@@ -181,17 +181,18 @@ docker-compose.test.yml
 
 ### Tools
 
-| Area | Tool |
-|---|---|
-| Frontend build | Vite |
-| Frontend unit tests | Node assertions |
-| Backend tests | JUnit 5, AssertJ, Spring Boot test support |
-| Optimizer unit tests | Python unittest |
-| Optimizer future property/regression tests | pytest, Hypothesis |
-| Test database | PostgreSQL via Docker Compose |
-| CI | GitHub Actions |
-| Contracts | JSON Schema in `shared/contracts` |
-| E2E future option | Playwright |
+| Area | Tool | Status |
+|---|---|---|
+| Frontend build | Vite | Implemented |
+| Frontend unit tests | Node assertions | Implemented for formatter tests |
+| Backend tests | JUnit 5, AssertJ, Spring Boot test support | Implemented for basic unit test; broader suite planned |
+| Optimizer unit tests | Python unittest | Implemented for route-time tests |
+| Optimizer property/regression tests | pytest, Hypothesis | Planned |
+| Test database | PostgreSQL via Docker Compose | Implemented as environment startup/config validation |
+| CI | GitHub Actions | Implemented for build and unit tests |
+| Contracts | JSON Schema in `shared/contracts` | Schema exists; automated validation planned |
+| E2E | Playwright | Planned |
+| AWS cloud hosting | S3/CloudFront, ECS Fargate, RDS PostgreSQL, Secrets Manager, CloudWatch | Planned target deployment according to ADR-0007 |
 
 ### Environment Rules
 
@@ -201,6 +202,17 @@ docker-compose.test.yml
 - Production data must not be used in automated tests.
 - Google Maps rendering is checked manually or as a smoke check only.
 - The isolated test database is defined in `docker-compose.test.yml`.
+
+### Environment Stages
+
+| Stage | Purpose | Status |
+|---|---|---|
+| Local development | Run frontend, backend, optimizer, and PostgreSQL locally for implementation and manual checks. | Implemented |
+| CI test environment | Run build checks, unit tests, and test database startup in GitHub Actions. | Implemented partly |
+| Staging | AWS-hosted pre-production environment for deployment smoke tests and acceptance checks before production. | Planned |
+| Production | AWS-hosted target environment for real use. | Planned |
+
+Staging and production are included as planned environments because the target deployment model is AWS-based. They are not required for the current local/CI unit-test workflow but should be considered before a production deployment.
 
 ## 7. Test Phases and CI Schedule
 
@@ -305,24 +317,7 @@ Testing for a feature can be accepted when:
 - Manual smoke testing confirms the main user workflow if the feature is UI-heavy.
 - Out-of-scope items are explicitly documented and not hidden as missing work.
 
-## 11. Suspension and Resumption Criteria
-
-Testing should be paused when:
-
-- The application cannot be built.
-- Database migrations cannot be applied.
-- The test environment cannot start.
-- Required test data is missing or corrupt.
-- A blocking defect prevents the tested workflow from being executed.
-
-Testing can resume when:
-
-- The build or migration problem is fixed.
-- The test database starts successfully.
-- Required fixtures or test data are restored.
-- The blocking defect is fixed or explicitly excluded from the current test scope.
-
-## 12. Test Deliverables
+## 11. Test Deliverables
 
 The project test deliverables are:
 
@@ -335,7 +330,7 @@ The project test deliverables are:
 - Future integration, contract, regression, property, and E2E tests.
 - CI run results in GitHub Actions.
 
-## 13. Current Verification Commands
+## 12. Current Verification Commands
 
 ```powershell
 # Backend unit tests
@@ -366,7 +361,7 @@ npx playwright test
 pytest
 ```
 
-## 14. Glossary
+## 13. Glossary
 
 | Term | Meaning |
 |---|---|
@@ -378,7 +373,7 @@ pytest
 | CVRPTW | Capacitated Vehicle Routing Problem with Time Windows. |
 | Seed | Search parameter used to improve reproducibility where solver behavior uses randomness. |
 
-## 15. Maintenance
+## 14. Maintenance
 
 This test concept is maintained together with the source code. Since this is a one-person project, no formal review workflow is required.
 
