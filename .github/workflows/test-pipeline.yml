@@ -34,7 +34,7 @@ jobs:
 
       - name: Java tests
         working-directory: apps/services/customer-master-service
-        run: ./gradlew test
+        run: bash ./gradlew test
 
       - name: Python syntax check
         run: python -m py_compile apps/optimizer/route-optimization-engine/src/main.py
