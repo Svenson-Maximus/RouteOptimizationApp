@@ -355,7 +355,7 @@ export function CustomersPage() {
                 </>
               ) : (
                 <button className="secondary" onClick={() => startEdit(row)}>
-                  Edit Address
+                  Edit
                 </button>
               )}
             </div>
