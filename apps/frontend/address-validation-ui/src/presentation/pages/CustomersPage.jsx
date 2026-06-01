@@ -229,7 +229,6 @@ export function CustomersPage() {
               <p><span>Thu Demand</span>{formatDemand(row, "thursday")}</p>
               <p><span>Fri Demand</span>{formatDemand(row, "friday")}</p>
               <p><span>Sat Demand</span>{formatDemand(row, "saturday")}</p>
-              <p><span>Time Window Note</span>{row.timeWindowNormalizationNote || "-"}</p>
               <p><span>Note</span>{row.deliveryNotes || "-"}</p>
             </div>
             <div className="edit-address">

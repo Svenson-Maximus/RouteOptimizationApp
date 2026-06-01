@@ -19,7 +19,6 @@
  * @property {string | null} timeWindowEnd
  * @property {string | null} rawTimeWindowStart
  * @property {string | null} rawTimeWindowEnd
- * @property {string | null} timeWindowNormalizationNote
  * @property {number | null} serviceTimeMinutes
  * @property {boolean} monday
  * @property {boolean} tuesday

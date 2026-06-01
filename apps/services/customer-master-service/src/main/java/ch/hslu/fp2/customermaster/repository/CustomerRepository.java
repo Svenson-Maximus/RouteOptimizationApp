@@ -47,8 +47,6 @@ public class CustomerRepository {
                                                                   AS raw_time_window_start,
                        COALESCE(dp.raw_time_window_end::text, '')
                                                                   AS raw_time_window_end,
-                       COALESCE(dp.time_window_normalization_note, '')
-                                                                  AS time_window_normalization_note,
                        dp.service_time_minutes                   AS service_time_minutes,
                        COALESCE(dp.monday, FALSE)                AS monday,
                        COALESCE(dp.tuesday, FALSE)               AS tuesday,
@@ -109,7 +107,6 @@ public class CustomerRepository {
                 blankToNull(rs.getString("time_window_end")),
                 blankToNull(rs.getString("raw_time_window_start")),
                 blankToNull(rs.getString("raw_time_window_end")),
-                blankToNull(rs.getString("time_window_normalization_note")),
                 rs.getObject("service_time_minutes", Integer.class),
                 rs.getBoolean("monday"),
                 rs.getBoolean("tuesday"),

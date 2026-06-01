@@ -286,7 +286,6 @@ erDiagram
         TIME raw_time_window_end
         TIME time_window_start
         TIME time_window_end
-        TEXT time_window_normalization_note
         INTEGER service_time_minutes
         BOOLEAN monday
         BOOLEAN tuesday

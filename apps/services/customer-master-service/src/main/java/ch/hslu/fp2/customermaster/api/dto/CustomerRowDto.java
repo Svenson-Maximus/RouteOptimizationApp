@@ -20,7 +20,6 @@ public record CustomerRowDto(
         String timeWindowEnd,
         String rawTimeWindowStart,
         String rawTimeWindowEnd,
-        String timeWindowNormalizationNote,
         Integer serviceTimeMinutes,
         boolean monday,
         boolean tuesday,
