@@ -1,40 +1,20 @@
 # Test Concept
 
-## Purpose
+## 1. Introduction and Objective
 
-The project uses an architecture-driven and risk-based test strategy. The test concept is not only based on a generic test pyramid, but on the concrete system decisions documented in the ADRs:
+This test concept defines the testing strategy for the Route Optimization App. It is maintained as a living Markdown document in the repository so that changes to architecture, scope, risks, or automation can be versioned together with the source code.
 
-- ADR-0002: 3-layer architecture with microservices in the business logic layer
-- ADR-0003: React frontend
-- ADR-0004: Java/Spring Boot backend services
-- ADR-0005: Python with Google OR-Tools for route optimization
-- ADR-0006: PostgreSQL with Flyway migrations
-- ADR-0008: local Docker Compose plus cloud-managed services
-- ADR-0009 and ADR-0010: Google Maps Platform, persisted travel-time and distance matrix
-- ADR-0011: CVRPTW model with time windows and vehicle capacities
+The structure is based on:
 
-Because the application crosses several technology boundaries, the test strategy puts more weight on integration and contract tests than a simple single-language application would. Because route optimization is the highest-risk part of the system, the optimizer also receives property and regression tests.
+- ISTQB test management principles: test planning, test strategy, test levels, risk-based testing, and iterative refinement.
+- IEEE 829-style master test plan contents: scope, test items, test approach, test environment, responsibilities, risks, deliverables, and acceptance criteria.
+- A pragmatic agile test concept approach: concise documentation, updated during development, with automated tests in CI where possible.
 
-## Project Context
+The objective is to find defects early, protect the most important architecture boundaries, and provide enough evidence for project/thesis documentation without creating a large static document that is not maintained.
 
-The project is developed by a small team in a thesis/project setting. Therefore, the test strategy must be realistic to maintain:
+## 2. Test Object and Architecture
 
-- Prefer fast automated tests for logic that changes often.
-- Use integration tests where architecture boundaries create real risk.
-- Keep end-to-end tests small and focused on critical workflows.
-- Use fixtures and regression tests for optimizer behavior instead of manually checking every route.
-- Avoid expensive or flaky tests that depend on live third-party APIs.
-
-As a guideline, the project follows an adapted test pyramid:
-
-- 60% unit tests
-- 25% integration tests
-- 10% contract tests
-- 5% end-to-end tests
-
-This split is intentionally adapted for React, Spring Boot, PostgreSQL, Python OR-Tools, and external map services. The percentages are a planning guideline, not a strict metric.
-
-## System Under Test
+The system under test is the Route Optimization App:
 
 ```text
 React frontend
@@ -45,9 +25,124 @@ React frontend
   -> Google Maps Embed / Google Maps links for route visualization
 ```
 
-The frontend does not call Google routing APIs directly. Matrix creation and route optimization are backend/optimizer responsibilities. Route visualization may use Google Maps in the browser, but tests should not depend on live Google map rendering except for optional manual or smoke checks.
+The test concept is aligned with the architecture decisions in the ADRs:
 
-## Repository Test Structure
+- ADR-0002: 3-layer architecture with microservices in the business logic layer
+- ADR-0003: React frontend
+- ADR-0004: Java/Spring Boot backend services
+- ADR-0005: Python with Google OR-Tools for route optimization
+- ADR-0006: PostgreSQL with Flyway migrations
+- ADR-0008: local Docker Compose plus cloud-managed services
+- ADR-0009 and ADR-0010: Google Maps Platform and persisted travel-time/distance matrix
+- ADR-0011: CVRPTW model with time windows and vehicle capacities
+
+Because the system crosses several technology boundaries, the test strategy puts more weight on integration and contract tests than a simple single-language application would. Because route optimization is the highest-risk part of the system, the optimizer also receives dedicated unit, property, and regression tests.
+
+## 3. Test Scope
+
+### In Scope
+
+- Customer master data editing:
+  - delivery address
+  - delivery address note
+  - delivery profile note
+  - weekday selection
+  - weekday-specific delivery and pickup demands
+  - service times and time windows
+- Geocoding review workflow and persisted geocoding results.
+- Travel-time and distance matrix usage.
+- Route optimization with OR-Tools:
+  - CVRPTW constraints
+  - search strategy and metaheuristic parameters
+  - seed handling for reproducibility
+  - dropped-stop handling
+  - per-vehicle and total route metrics
+- Persistence of complete optimization runs.
+- Route visualization and stop table display:
+  - route map
+  - stop order
+  - arrival, waiting, service start, service end, departure
+  - demand and remaining capacity
+  - delivery address notes
+- API contracts between frontend, backend, and optimizer.
+- Database migrations relevant to customer data, route matrix data, and optimization-run history.
+- Automated CI checks for build, unit tests, and basic test environment validation.
+
+### Out of Scope
+
+- Full load/performance testing.
+- Security penetration testing.
+- Browser compatibility matrix across many browser versions.
+- Automated tests that call live Google APIs in CI.
+- Full real-time traffic comparison.
+- Full E2E regression suite for every UI workflow.
+- Production monitoring and incident-response tests.
+
+These items can be added later if the project scope or deployment risk increases.
+
+## 4. Test Strategy
+
+The project uses a shift-left, risk-based, architecture-driven strategy.
+
+Shift-left means that defects should be found by fast checks before a full browser/database/system run is needed. Risk-based means the optimizer, persistence, and service contracts receive more attention than low-risk display-only behavior.
+
+As a planning guideline, the project follows an adapted test pyramid:
+
+- 60% unit tests
+- 25% integration tests
+- 10% contract tests
+- 5% end-to-end tests
+
+The percentages are not strict metrics. They describe the intended balance for a React, Spring Boot, PostgreSQL, Python OR-Tools system.
+
+### Test Levels
+
+| Level | Purpose | Current/Planned Examples |
+|---|---|---|
+| Unit tests | Test isolated functions, classes, components, or algorithmic rules. | React formatter tests, Java DTO/service tests, Python route-time tests. |
+| Component tests | Test React components with realistic props and mocked APIs. | Customer edit form, route stop table, recent runs table. |
+| Integration tests | Test collaboration across one technical boundary. | Spring + PostgreSQL, Spring invoking optimizer, optimizer reading matrix data. |
+| Contract tests | Protect JSON/API/database contracts across languages. | React-backend response schemas, backend-optimizer result schema, migration expectations. |
+| Property tests | Check optimizer invariants over varied inputs. | Capacity never exceeded, served stops respect time windows, dropped stops are explicit. |
+| Regression tests | Preserve behavior for fixed bugs and professor-review findings. | Waiting time at arrival, dropped runs not persisted, weekday-specific demands. |
+| End-to-end tests | Prove critical user workflows through the full stack. | Edit customer, calculate route, inspect result and map. |
+
+## 5. Test Design Techniques
+
+The following test design techniques are used or planned:
+
+- Equivalence partitioning:
+  - valid and invalid customer addresses
+  - complete and incomplete optimization runs
+  - active and inactive weekday customers
+- Boundary value analysis:
+  - time-window start/end boundaries
+  - service time limits
+  - vehicle capacity limits
+  - Google Maps route point limits
+- Decision table testing:
+  - whether an optimization run is persisted as good/recent
+  - whether a customer is eligible for a selected weekday
+  - whether route visualization can be shown or needs a fallback
+- Use-case testing:
+  - customer edits data
+  - planner calculates route
+  - driver opens a stop in Google Maps
+- Contract/schema testing:
+  - backend response shapes
+  - optimizer JSON result shape
+  - shared schema files under `shared/contracts`
+- Regression testing:
+  - every relevant bug or professor-review finding gets a regression test where practical.
+- Property-based testing for optimizer behavior:
+  - no capacity violation
+  - no duplicate served stop
+  - time windows respected
+  - dropped stops explicitly reported
+
+## 6. Test Environment and Tools
+
+### Repository Test Structure
 
 ```text
 apps/
@@ -72,203 +167,181 @@ apps/
       contract/
       e2e/
 
+shared/
+  contracts/
+
 test-fixtures/
   example-inputs/
   expected-outputs/
   mock-api-responses/
 
-shared/
-  contracts/
-
 docker-compose.test.yml
 .github/workflows/test-pipeline.yml
 ```
 
-## Test Levels
+### Tools
 
-### Unit Tests
+| Area | Tool |
+|---|---|
+| Frontend build | Vite |
+| Frontend unit tests | Node assertions |
+| Backend tests | JUnit 5, AssertJ, Spring Boot test support |
+| Optimizer unit tests | Python unittest |
+| Optimizer future property/regression tests | pytest, Hypothesis |
+| Test database | PostgreSQL via Docker Compose |
+| CI | GitHub Actions |
+| Contracts | JSON Schema in `shared/contracts` |
+| E2E future option | Playwright |
 
-Purpose: test one function, class, component, or algorithmic rule in isolation.
+### Environment Rules
 
-Rules:
+- Automated CI tests must not call live Google APIs.
+- API keys and secrets must not be committed.
+- Test data must be deterministic and safe to commit.
+- Production data must not be used in automated tests.
+- Google Maps rendering is checked manually or as a smoke check only.
+- The isolated test database is defined in `docker-compose.test.yml`.
 
-- No database.
-- No network.
-- No Docker.
-- Deterministic and fast.
+## 7. Test Phases and CI Schedule
 
-Examples:
+### Current CI Pipeline
 
-- React formatting helpers, form state updates, route-table formatting, and capacity display.
-- Java validation, DTO mapping, service decisions, and persistence guard logic.
-- Python route time formatting, weekday demand selection, matrix validation, capacity calculation, and result mapping.
+The GitHub Actions workflow is located at:
 
-### Component Tests
+```text
+.github/workflows/test-pipeline.yml
+```
 
-Purpose: test React components with realistic props and mocked APIs.
+On every push and pull request, the `unit-tests` job runs:
 
-Examples:
+```text
+Frontend:
+- npm ci
+- npm run build
+- npm test
 
-- Customer edit form saves delivery address notes, profile notes, weekdays, and daily demands.
-- Route planner renders strategy controls, run history, vehicle metrics, maps, and stop tables.
-- Stop rows display remaining capacity in decreasing order, for example `100 to 99 / 100`.
+Backend:
+- bash ./gradlew test
 
-### Integration Tests
+Optimizer:
+- python -m py_compile ...
+- python -m unittest discover ...
+```
 
-Purpose: test collaboration across one technical boundary.
+The `integration` job currently validates that the isolated PostgreSQL test environment can start:
 
-Examples:
+```text
+docker compose -f docker-compose.test.yml up -d postgres-test
+docker compose -f docker-compose.test.yml ps
+```
 
-- Spring service with PostgreSQL and Flyway migrations.
-- Spring optimization orchestration invoking the Python optimizer with fixed fixtures.
-- Python optimizer reading matrix/customer/vehicle input from a test database or fixture.
-- React page using mocked backend API responses.
+### Planned Extensions
 
-### Contract Tests
+On merge to main:
 
-Purpose: protect language and service boundaries.
+- Spring integration tests with PostgreSQL.
+- Backend-optimizer integration test with fixed fixture input.
+- Contract validation against `shared/contracts`.
 
-Contracts:
+Before demo/release:
 
-- React expects the Spring `/api/optimization-runs` and `/api/customers` response shapes.
-- Spring expects the Python optimizer JSON result shape.
-- Database migrations provide required columns for customers, delivery profiles, matrix entries, vehicles, and optimization-run history.
+- Optimizer regression tests with historical/fixed datasets.
+- E2E smoke test for the critical route-calculation workflow.
+- Manual smoke check of Google Maps visualization.
 
-Preferred implementation:
+## 8. Roles and Responsibilities
 
-- JSON Schema for API and optimizer payloads.
-- OpenAPI later if the REST API grows.
-- Contract schemas under `shared/contracts`.
+This is a one-person student/project repository.
 
-### Property Tests
-
-Purpose: check optimizer invariants over many generated or varied inputs.
-
-Examples:
-
-- No route may exceed vehicle capacity.
-- A stop is either served exactly once or reported as dropped.
-- If dropped stops are returned, the run must not be persisted as a good/recent run.
-- Service start must be inside the configured time window when a stop is served.
-- `departureTime` must be greater than or equal to `serviceStartTime`.
-
-### Regression Tests
-
-Purpose: preserve behavior for known bugs, professor-review findings, and fixed route-planning issues.
-
-Examples:
-
-- Waiting time is shown at arrival, not hidden in the previous departure.
-- Weekday-specific delivery and pickup demands are used for the selected day.
-- `SAVINGS` and `PARALLEL_SAVINGS` remain accepted first-solution strategies.
-- Complete runs are persisted; runs with dropped stops are not.
-- Total route duration and distance remain present in optimizer and API output.
-
-### End-to-End Tests
-
-Purpose: prove critical user workflows work end to end.
-
-Keep this layer small:
-
-- Edit a customer including delivery address note and weekday demands.
-- Calculate a route for one weekday.
-- Show route metrics, capacity per stop, and route visualization.
-- Persist only complete runs.
-- Confirm geocoding suggestion flow.
-
-Run E2E tests against `docker-compose.test.yml` or an equivalent isolated test environment.
-
-## Risk-Based Test Matrix
-
-| Risk | Example Failure | Main Test Type |
+| Role | Responsible Person | Responsibility |
 |---|---|---|
-| Customer data is persisted incorrectly | Delivery address note overwrites profile note | Backend integration, frontend component |
-| Weekday demand is wrong | Monday route uses Tuesday delivery or pickup values | Backend integration, optimizer regression |
-| Java/Python contract changes | Backend cannot parse optimizer result | Contract test |
-| Dropped stops are treated as good runs | Incomplete route appears in Recent Runs | Backend unit/integration, regression |
-| Capacity logic is wrong | Vehicle route exceeds capacity or UI shows wrong remaining load | Optimizer property, frontend component |
-| Time-window logic is wrong | Vehicle arrives early but waiting is assigned to the wrong stop | Optimizer unit/regression |
-| Route metrics are incomplete | Vehicle duration or distance is missing from API/UI | Contract, frontend component |
-| Google API dependency becomes flaky or costly | Tests call live Google APIs repeatedly | Mocked integration, manual smoke only |
-| Database schema drifts from code | Migration misses required column | Flyway integration, contract |
-| Full workflow breaks | User cannot calculate and inspect a route | E2E smoke |
+| Developer | Sven Leutenegger | Implements frontend, backend, optimizer, database migrations, and tests. |
+| Test responsible | Sven Leutenegger | Maintains this test concept, test structure, fixtures, and CI pipeline. |
+| Test automation | Sven Leutenegger | Implements automated unit, integration, contract, and future E2E tests. |
+| Product/stakeholder review | Supervisor/professor | Reviews scope, quality expectations, and thesis/project outcomes. |
+| Acceptance decision | Supervisor/professor and project context | Gives feedback or acceptance based on project requirements and demonstration. |
 
-## Critical Test Cases
+Because the same person develops and tests, automated tests, CI, fixtures, and regression tests are important safeguards against confirmation bias.
 
-### Customer Model
+## 9. Risks and Assumptions
 
-- Editing a delivery address persists the address fields.
-- Delivery address note and delivery profile note are independent.
-- Weekday-specific delivery and pickup demands persist correctly.
-- Invalid or missing time windows fail clearly.
+| Risk | Example Failure | Mitigation |
+|---|---|---|
+| Customer data is persisted incorrectly | Delivery address note overwrites profile note. | Backend integration tests and frontend component tests. |
+| Weekday demand is wrong | Monday route uses Tuesday delivery or pickup values. | Backend integration and optimizer regression tests. |
+| Java/Python contract changes | Backend cannot parse optimizer result. | JSON schema contract tests. |
+| Dropped stops are treated as good runs | Incomplete route appears in Recent Runs. | Backend unit/integration tests and regression test. |
+| Capacity logic is wrong | Vehicle route exceeds capacity or UI shows wrong remaining load. | Optimizer property tests and frontend component tests. |
+| Time-window logic is wrong | Waiting time is assigned to the wrong stop. | Optimizer unit/regression tests. |
+| Route metrics are incomplete | Vehicle duration or distance is missing from API/UI. | Contract tests and frontend component tests. |
+| Google API dependency becomes flaky or costly | CI repeatedly calls live Google APIs. | Mocked responses and persisted matrix fixtures. |
+| Database schema drifts from code | Migration misses required column. | Flyway integration tests. |
+| One-person project bias | Developer misses defects in own implementation. | CI, regression tests, code review by supervisor where possible. |
 
-### Optimization
+Assumptions:
 
-- `SAVINGS` and `PARALLEL_SAVINGS` are accepted as first solution strategies.
-- `GUIDED_LOCAL_SEARCH`, `TABU_SEARCH`, `SIMULATED_ANNEALING`, `GREEDY_DESCENT`, and `AUTOMATIC` are accepted as local search metaheuristics.
-- Route output includes per-vehicle duration and distance.
-- Route output includes total duration and total distance.
-- Runs with dropped stops are not persisted as recent/good runs.
-- A fixed seed produces deterministic output where OR-Tools supports deterministic behavior.
-- The selected weekday controls active customers and delivery/pickup demand values.
-- Served stops respect time windows and vehicle capacity.
+- PostgreSQL remains the system of record.
+- The first route matrix is persisted and reused for optimization runs.
+- The project does not require live-traffic optimization in automated tests.
+- Google API calls are backend responsibilities and are not part of normal CI.
+- The application is developed and tested incrementally.
 
-### Route UI
+## 10. Acceptance Criteria and Definition of Done
 
-- Recent Runs table loads persisted runs from the backend.
-- Recent Runs table shows strategy, metaheuristic, time limit, waiting, seed, duration, and distance.
-- Vehicle cards show total time and total distance.
-- Stop rows show remaining capacity decreasing, e.g. `100 to 99 / 100`.
-- Stop navigation opens Google Maps for that one stop only.
-- Route map embeds do not block the core workflow if the Google Maps key is missing.
+A feature is considered complete when:
 
-## Test Data and Fixtures
+- New pure logic has unit tests.
+- Changed service/database behavior has integration tests where practical.
+- API or optimizer response changes update the relevant contract schema or fixture.
+- Critical UI behavior is covered by component or E2E tests where practical.
+- Existing verification commands pass locally or in CI.
+- Bugs and professor-review findings receive regression tests where practical.
+- Tests do not require live third-party APIs unless explicitly marked as manual or smoke tests.
 
-Fixtures are stored under `test-fixtures/` and should be small, deterministic, and safe to commit.
+Testing for a feature can be accepted when:
 
-Required fixture types:
+- CI is green for the relevant changed areas.
+- No known critical bug remains open for the feature.
+- Manual smoke testing confirms the main user workflow if the feature is UI-heavy.
+- Out-of-scope items are explicitly documented and not hidden as missing work.
 
-- Example optimization requests.
-- Expected optimization summaries.
-- Mock backend API responses for React tests.
-- JSON Schemas for API and optimizer contracts.
-- Small matrix/customer/vehicle datasets for optimizer tests.
+## 11. Suspension and Resumption Criteria
 
-Test data should include:
+Testing should be paused when:
 
-- One depot.
-- Two vehicles with capacity `100`.
-- Customers with different weekday demands.
-- One customer with delivery demand and pickup demand.
-- One customer with a narrow time window for waiting behavior.
-- One customer with a delivery address note and a separate delivery profile note.
-- At least one fixture where a stop would be dropped, to verify that the run is not persisted as good.
+- The application cannot be built.
+- Database migrations cannot be applied.
+- The test environment cannot start.
+- Required test data is missing or corrupt.
+- A blocking defect prevents the tested workflow from being executed.
 
-## Test Environment
+Testing can resume when:
 
-Local development:
+- The build or migration problem is fixed.
+- The test database starts successfully.
+- Required fixtures or test data are restored.
+- The blocking defect is fixed or explicitly excluded from the current test scope.
 
-- PostgreSQL and supporting infrastructure run through Docker Compose.
-- Frontend and backend can run as local development servers.
-- Python optimizer can be executed independently for fixture-based tests.
+## 12. Test Deliverables
 
-Automated tests:
+The project test deliverables are:
 
-- Use `docker-compose.test.yml` for an isolated PostgreSQL test database.
-- Do not use production data.
-- Do not call live Google APIs in normal automated tests.
-- Mock Google API responses or use persisted matrix fixtures.
-- Keep API keys out of test fixtures and source control.
+- `docs/testing/test-concept.md`: this living test concept.
+- `.github/workflows/test-pipeline.yml`: automated CI pipeline.
+- `docker-compose.test.yml`: isolated test database environment.
+- `shared/contracts/`: contract schemas.
+- `test-fixtures/`: reusable test data.
+- Unit test files in frontend, backend, and optimizer modules.
+- Future integration, contract, regression, property, and E2E tests.
+- CI run results in GitHub Actions.
 
-## Concrete Verification Commands
-
-Current project checks:
+## 13. Current Verification Commands
 
 ```powershell
-# Backend
+# Backend unit tests
 .\gradlew.bat test
 
-# Frontend
+# Frontend build and unit tests
 npm run build
 npm test
 
@@ -283,7 +356,7 @@ $env:PYTHONPATH='apps\optimizer\route-optimization-engine\src'
 docker compose -f docker-compose.test.yml config
 ```
 
-Planned test commands when the corresponding suites are implemented:
+Planned commands:
 
 ```powershell
 # Frontend E2E tests
@@ -293,39 +366,27 @@ npx playwright test
 pytest
 ```
 
-## CI Policy
+## 14. Glossary
 
-On every commit:
+| Term | Meaning |
+|---|---|
+| Test concept | Master document describing scope, approach, resources, responsibilities, risks, and acceptance criteria. |
+| Test plan | Concrete schedule and execution plan for a test level or release. |
+| Test case / test script | Detailed executable or manual check with inputs and expected results. |
+| Contract test | Test that verifies an API or JSON schema between components. |
+| Regression test | Test that prevents a previously fixed defect from returning. |
+| CVRPTW | Capacitated Vehicle Routing Problem with Time Windows. |
+| Seed | Search parameter used to improve reproducibility where solver behavior uses randomness. |
 
-- Frontend build and unit/component tests.
-- Java unit tests.
-- Python compile and unit tests.
-- Contract validation.
+## 15. Change and Review Policy
 
-On merge to main:
+This document is reviewed when:
 
-- Integration tests with database.
-- Optimizer regression tests with fixed fixtures.
-- E2E smoke tests.
+- A new major component is added.
+- API contracts change.
+- The optimizer model changes.
+- CI stages change.
+- A professor-review finding affects testing.
+- A production-like defect reveals a gap in the test strategy.
 
-Nightly or before a release/demo:
-
-- Full E2E suite.
-- Optimizer performance/regression comparison on historical datasets.
-- Optional manual smoke check of Google Maps visualization.
-
-## Definition of Done
-
-A feature is considered complete when:
-
-- New pure logic has unit tests.
-- Changed service/database behavior has integration tests.
-- API or optimizer response changes update the relevant contract fixtures.
-- Critical UI behavior is covered by component or E2E tests.
-- Existing verification commands pass.
-- Bugs and professor-review findings receive regression tests where practical.
-- Tests do not require live third-party APIs unless explicitly marked as manual or smoke tests.
-
-## Bug Policy
-
-Every production bug, route-planning defect, or professor-review finding gets a regression test before the fix is considered complete, unless the case is only a documentation issue or cannot be automated with reasonable effort.
+In an agile project context, the document is not frozen. It is updated together with the code and reviewed as part of normal project progress.
