@@ -596,8 +596,100 @@ body {
   min-width: 260px;
 }
 
+.route-stop-table td:nth-child(6) > span {
+  display: inline;
+}
+
+.address-note-button {
+  margin-left: 6px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #b7cbbb;
+  border-radius: 50%;
+  background: #f5fbf5;
+  color: #2d6a3e;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.address-note-button:hover {
+  background: #e7f5e9;
+  border-color: #7eb58a;
+}
+
 .route-stop-table td:nth-child(5) strong {
   color: var(--muted);
+}
+
+.note-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(20, 33, 25, 0.34);
+}
+
+.note-dialog {
+  width: min(420px, 100%);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 20px 50px rgba(20, 33, 25, 0.2);
+  padding: 16px;
+}
+
+.note-dialog-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.note-dialog-head h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.note-dialog-head p,
+.note-dialog-address,
+.note-dialog-text {
+  margin: 0;
+}
+
+.note-dialog-head p,
+.note-dialog-address {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.note-dialog-address {
+  margin-top: 10px;
+}
+
+.note-dialog-text {
+  margin-top: 12px;
+  color: #24382d;
+  white-space: pre-wrap;
+}
+
+.note-dialog-close {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.note-dialog-close:hover {
+  color: #24382d;
+  border-color: #9db29f;
 }
 
 .dropped-stops {

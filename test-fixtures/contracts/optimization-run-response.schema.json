@@ -42,7 +42,26 @@
           "customerStopCount": { "type": "integer" },
           "totalRouteSeconds": { "type": ["integer", "null"] },
           "totalDistanceMeters": { "type": ["integer", "null"] },
-          "stops": { "type": "array" }
+          "stops": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "customerId": { "type": ["string", "null"] },
+                "companyIndex": { "type": ["string", "null"] },
+                "name": { "type": "string" },
+                "address": { "type": ["string", "null"] },
+                "addressNote": { "type": ["string", "null"] },
+                "arrivalTime": { "type": "string" },
+                "serviceStartTime": { "type": "string" },
+                "departureTime": { "type": "string" },
+                "deliveryDemandUnits": { "type": "integer" },
+                "pickupDemandUnits": { "type": "integer" },
+                "loadBeforeService": { "type": "integer" },
+                "loadAfterService": { "type": "integer" }
+              }
+            }
+          }
         }
       }
     }

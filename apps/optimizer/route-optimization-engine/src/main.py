@@ -39,6 +39,7 @@ class Stop:
     company_index: str | None
     name: str
     address: str | None
+    address_note: str | None
     latitude: float
     longitude: float
     delivery_demand_units: int
@@ -117,6 +118,7 @@ def load_stops(conn: psycopg.Connection, weekday: str) -> list[Stop]:
                NULL::text AS company_index,
                rl.name AS name,
                NULL::text AS address,
+               NULL::text AS address_note,
                rl.latitude,
                rl.longitude,
                0 AS delivery_demand_units,
@@ -138,6 +140,7 @@ def load_stops(conn: psycopg.Connection, weekday: str) -> list[Stop]:
                    NULLIF(a.full_address_raw, ''),
                    concat_ws(' ', NULLIF(a.street, ''), NULLIF(a.building_no, ''), NULLIF(a.postal_code, ''), NULLIF(a.city, ''))
                ) AS address,
+               NULLIF(a.delivery_note, '') AS address_note,
                rl.latitude,
                rl.longitude,
                COALESCE(dp.{delivery_demand_column}, crm.demand_units, 1) AS delivery_demand_units,
@@ -171,7 +174,7 @@ def load_stops(conn: psycopg.Connection, weekday: str) -> list[Stop]:
 
     if not rows:
         raise ValueError(f"No route locations found for weekday {weekday}")
-    if rows[0][12] != 0:
+    if rows[0][13] != 0:
         raise ValueError("Expected depot to be the first stop")
 
     stops: list[Stop] = []
@@ -182,6 +185,7 @@ def load_stops(conn: psycopg.Connection, weekday: str) -> list[Stop]:
             company_index,
             name,
             address,
+            address_note,
             latitude,
             longitude,
             delivery_demand_units,
@@ -205,6 +209,7 @@ def load_stops(conn: psycopg.Connection, weekday: str) -> list[Stop]:
                 company_index=company_index,
                 name=name,
                 address=address,
+                address_note=address_note,
                 latitude=float(latitude),
                 longitude=float(longitude),
                 delivery_demand_units=int(delivery_demand_units),
@@ -414,6 +419,7 @@ def build_result(
                     "companyIndex": stop.company_index,
                     "name": stop.name,
                     "address": stop.address,
+                    "addressNote": stop.address_note,
                     "latitude": stop.latitude,
                     "longitude": stop.longitude,
                     "arrivalSeconds": arrival_seconds,
@@ -460,6 +466,7 @@ def build_result(
                 "companyIndex": end_stop.company_index,
                 "name": end_stop.name,
                 "address": end_stop.address,
+                "addressNote": end_stop.address_note,
                 "latitude": end_stop.latitude,
                 "longitude": end_stop.longitude,
                 "arrivalSeconds": end_arrival_seconds,
@@ -522,6 +529,7 @@ def build_result(
                     "companyIndex": stop.company_index,
                     "name": stop.name,
                     "address": stop.address,
+                    "addressNote": stop.address_note,
                     "latitude": stop.latitude,
                     "longitude": stop.longitude,
                     "demandUnits": stop.capacity_demand_units,

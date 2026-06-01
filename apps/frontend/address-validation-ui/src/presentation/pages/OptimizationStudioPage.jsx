@@ -114,6 +114,7 @@ export function OptimizationStudioPage() {
   const [error, setError] = useState(null);
   const [recentRuns, setRecentRuns] = useState([]);
   const [loadingRuns, setLoadingRuns] = useState(false);
+  const [selectedAddressNote, setSelectedAddressNote] = useState(null);
   const [config, setConfig] = useState({
     weekday: "monday",
     matrixRunId: "",
@@ -451,7 +452,24 @@ export function OptimizationStudioPage() {
                               <strong>{stop.companyIndex}</strong>
                               <span>{stop.name}</span>
                             </td>
-                            <td>{stop.address || "-"}</td>
+                            <td>
+                              <span>{stop.address || "-"}</span>
+                              {stop.addressNote && (
+                                <button
+                                  type="button"
+                                  className="address-note-button"
+                                  title="Show delivery address note"
+                                  aria-label={`Show delivery address note for ${stop.name}`}
+                                  onClick={() => setSelectedAddressNote({
+                                    customer: `${stop.companyIndex || ""} ${stop.name}`.trim(),
+                                    address: stop.address,
+                                    note: stop.addressNote,
+                                  })}
+                                >
+                                  i
+                                </button>
+                              )}
+                            </td>
                             <td>{stop.timeWindowStart}-{stop.timeWindowEnd}</td>
                             <td>{stop.serviceEndTime}</td>
                             <td>{stop.departureTime}</td>
@@ -466,6 +484,24 @@ export function OptimizationStudioPage() {
                 </div>
               </article>
             ))}
+          </div>
+        </div>
+      )}
+
+      {selectedAddressNote && (
+        <div className="note-dialog-backdrop" role="presentation" onClick={() => setSelectedAddressNote(null)}>
+          <div className="note-dialog" role="dialog" aria-modal="true" aria-labelledby="address-note-title" onClick={(event) => event.stopPropagation()}>
+            <div className="note-dialog-head">
+              <div>
+                <h3 id="address-note-title">Delivery Note</h3>
+                <p>{selectedAddressNote.customer}</p>
+              </div>
+              <button type="button" className="note-dialog-close" onClick={() => setSelectedAddressNote(null)} aria-label="Close delivery note">
+                x
+              </button>
+            </div>
+            <p className="note-dialog-address">{selectedAddressNote.address || "No address available"}</p>
+            <p className="note-dialog-text">{selectedAddressNote.note}</p>
           </div>
         </div>
       )}
