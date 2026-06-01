@@ -280,7 +280,6 @@ export function OptimizationStudioPage() {
 
         <div className="card run-history-card">
           <h3>Recent Runs</h3>
-          <p><strong>{readyCount}</strong> validated customers scheduled for {config.weekday}.</p>
           {loadingRuns ? (
             <p className="muted">Loading recent runs...</p>
           ) : recentRuns.length > 0 ? (
