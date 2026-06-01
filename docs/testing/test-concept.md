@@ -73,13 +73,15 @@ apps/
       e2e/
 
 test-fixtures/
-  contracts/
   example-inputs/
   expected-outputs/
   mock-api-responses/
 
+shared/
+  contracts/
+
 docker-compose.test.yml
-ci/test-pipeline.yml
+.github/workflows/test-pipeline.yml
 ```
 
 ## Test Levels
@@ -136,7 +138,7 @@ Preferred implementation:
 
 - JSON Schema for API and optimizer payloads.
 - OpenAPI later if the REST API grows.
-- Contract fixtures under `test-fixtures/contracts`.
+- Contract schemas under `shared/contracts`.
 
 ### Property Tests
 
@@ -268,9 +270,14 @@ Current project checks:
 
 # Frontend
 npm run build
+npm test
 
 # Optimizer syntax check
-.conda\envs\route-optimizer\python.exe -m py_compile apps\optimizer\route-optimization-engine\src\main.py
+.conda\envs\route-optimizer\python.exe -m py_compile apps\optimizer\route-optimization-engine\src\main.py apps\optimizer\route-optimization-engine\src\route_time.py
+
+# Optimizer unit tests
+$env:PYTHONPATH='apps\optimizer\route-optimization-engine\src'
+.conda\envs\route-optimizer\python.exe -m unittest discover -s apps\optimizer\route-optimization-engine\tests\unit -p "test_*.py"
 
 # Test Docker Compose validation
 docker compose -f docker-compose.test.yml config
@@ -279,13 +286,10 @@ docker compose -f docker-compose.test.yml config
 Planned test commands when the corresponding suites are implemented:
 
 ```powershell
-# Frontend unit/component tests
-npm test
-
 # Frontend E2E tests
 npx playwright test
 
-# Optimizer tests
+# Optimizer property/regression tests
 pytest
 ```
 

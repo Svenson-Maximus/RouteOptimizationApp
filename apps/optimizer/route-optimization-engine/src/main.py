@@ -2,15 +2,13 @@ import argparse
 import json
 import os
 from dataclasses import dataclass
-from datetime import time, timedelta
 from typing import Any
 
 import psycopg
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
+from route_time import ROUTE_END, ROUTE_START, format_route_time, route_horizon_seconds, seconds_from_route_start
 
 
-ROUTE_START = time(4, 20)
-ROUTE_END = time(19, 0)
 WEEKDAYS = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday"}
 FIRST_SOLUTION_STRATEGIES = {
     "AUTOMATIC": routing_enums_pb2.FirstSolutionStrategy.AUTOMATIC,
@@ -80,16 +78,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--local-search-metaheuristic", default="GUIDED_LOCAL_SEARCH", choices=sorted(LOCAL_SEARCH_METAHEURISTICS))
     parser.add_argument("--random-seed", type=int)
     return parser.parse_args()
-
-
-def seconds_from_route_start(value: time) -> int:
-    base = timedelta(hours=ROUTE_START.hour, minutes=ROUTE_START.minute, seconds=ROUTE_START.second)
-    current = timedelta(hours=value.hour, minutes=value.minute, seconds=value.second)
-    return int((current - base).total_seconds())
-
-
-def route_horizon_seconds() -> int:
-    return seconds_from_route_start(ROUTE_END)
 
 
 def load_optimizer_input(conn: psycopg.Connection, weekday: str, matrix_run_id: str) -> OptimizerInput:
@@ -562,13 +550,6 @@ def build_result(
         "droppedStops": dropped,
         "routes": routes,
     }
-
-
-def format_route_time(seconds_after_start: int) -> str:
-    total_minutes = ROUTE_START.hour * 60 + ROUTE_START.minute + seconds_after_start // 60
-    hours = (total_minutes // 60) % 24
-    minutes = total_minutes % 60
-    return f"{hours:02d}:{minutes:02d}"
 
 
 def main() -> None:
