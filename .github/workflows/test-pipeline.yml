@@ -6,7 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  fast-checks:
+  unit-tests:
+    name: Unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,14 +27,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Frontend build
+      - name: Frontend build and unit tests
         working-directory: apps/frontend/address-validation-ui
         run: |
           npm ci
           npm run build
           npm test
 
-      - name: Java tests
+      - name: Java unit tests
         working-directory: apps/services/customer-master-service
         run: bash ./gradlew test
 
@@ -45,8 +46,9 @@ jobs:
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p "test_*.py"
 
   integration:
+    name: Integration test environment
     runs-on: ubuntu-latest
-    needs: fast-checks
+    needs: unit-tests
     steps:
       - uses: actions/checkout@v4
 
