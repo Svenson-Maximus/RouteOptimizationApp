@@ -28,7 +28,6 @@ Chosen option: **Java with Spring Boot**.
 - Java provides a stable runtime for business workflows and structured application code.
 - Spring Boot works well with PostgreSQL, Flyway, and containerized deployment.
 - Separating Java business services from the Python optimizer keeps operational workflows distinct from optimization logic.
-- The existing customer master service already uses Spring Boot.
 - Node.js was not selected because Spring Boot better fits the enterprise-style service and database workflow used in this project.
 - Python with FastAPI was not selected for business services because Python is reserved for optimization, keeping service responsibilities clearer.
 - Serverless functions were not selected as the main backend runtime because the project needs stateful service workflows and local development simplicity.

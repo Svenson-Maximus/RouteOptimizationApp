@@ -26,10 +26,9 @@ Chosen option: **React**.
 - React has strong market value: in the Stack Overflow Developer Survey 2025, React was used by 46.9% of professional developers in the web frameworks category, ahead of Angular and Vue: https://survey.stackoverflow.co/2025/technology
 - The component model supports a clear separation of pages, UI components, use cases, and API access.
 - React works well with Vite for lightweight local development.
-- The existing frontend implementation already uses React.
 - React keeps the frontend independent from backend runtime decisions.
 - Angular was not selected because it adds more framework structure than the current frontend scope requires and has lower professional-developer usage than React in the survey.
-- Vue was not selected because the project already uses React and Vue has lower professional-developer usage than React in the survey.
+- Vue was not selected because React has stronger professional-developer usage in the survey and better matches the intended component-oriented frontend structure for this project.
 - A server-rendered Spring Boot UI was not selected because the frontend should remain independent from the backend runtime.
 
 ## Consequences

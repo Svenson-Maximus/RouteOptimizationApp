@@ -24,17 +24,17 @@ Chosen option: **Python with Google OR-Tools**.
 ### Justification
 - OR-Tools provides established support for vehicle routing problems, time windows, and capacity constraints.
 - Python is widely used for optimization experiments, scripting, and data processing, which makes it practical for the route optimization engine.
-- Existing legacy optimization scripts are already written in Python.
+- Python lowers migration risk because earlier route-optimization experiments and examples for this project were Python-based.
 - Keeping the optimizer separate from business services allows the optimization model to evolve independently.
 - A custom solver would add unnecessary algorithmic risk for the project scope.
-- Java with OR-Tools was not selected because the existing optimization examples and legacy scripts are Python-based.
+- Java with OR-Tools was not selected because Python is more practical for experimentation and keeps optimization logic separate from Java business orchestration.
 - A commercial solver was not selected because it would add licensing and integration overhead that is not needed for the project scope.
 
 ## Consequences
 ### Good
 - The project can use proven vehicle routing functionality.
 - Optimization logic can be developed and tested independently.
-- Existing Python work can be reused or migrated.
+- Earlier Python experiments can be migrated with less translation effort.
 
 ### Bad
 - The platform uses another runtime in addition to Java and JavaScript.

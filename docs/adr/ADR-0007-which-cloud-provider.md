@@ -28,9 +28,9 @@ Chosen option: **AWS**.
 - ECS Fargate fits containerized backend and optimizer workloads.
 - RDS PostgreSQL fits managed relational database hosting.
 - Secrets Manager and CloudWatch support secret handling and operational visibility.
-- The existing repository already contains an AWS infrastructure blueprint.
-- Azure was not selected because the repository and deployment notes are already aligned with AWS services.
-- Google Cloud was not selected because using Google Maps Platform does not require hosting the application on Google Cloud.
+- AWS was also selected as a learning goal: Google Cloud would have been a natural and possibly simpler provider choice because the project already uses Google Maps Platform and I am more familiar with Google Cloud. Using AWS broadens the technical scope and builds practical AWS deployment experience.
+- Azure was not selected because it does not provide a stronger project-specific advantage than AWS for the required hosting model.
+- Google Cloud was not selected even though it would integrate naturally with Google Maps Platform and would likely have been easier for me. The project intentionally separates map-provider usage from the cloud-hosting learning goal.
 - Local-only deployment was not selected because the project should still describe a realistic cloud target model.
 
 ## Consequences
@@ -43,3 +43,4 @@ Chosen option: **AWS**.
 - The architecture becomes partially provider-specific.
 - AWS knowledge is required for deployment and operations.
 - Cloud costs and security configuration must be managed carefully.
+- Google Cloud might have reduced provider diversity and learning value because Google Maps Platform is already used.

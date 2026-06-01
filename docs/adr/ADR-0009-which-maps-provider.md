@@ -28,7 +28,7 @@ Chosen option: **Google Maps Platform**.
 ### Justification
 - Google Maps provides mature geocoding and route matrix APIs.
 - Google is the simplest option for this project because one provider can cover geocoding, Place IDs, travel times, and distances.
-- The legacy prototype already used Google APIs, so Google also has the lowest migration effort.
+- Using one provider for geocoding, place identity, travel-time matrices, and visualization reduces integration complexity.
 - Backend geocoding resolves depot and customer addresses to formatted addresses, Place IDs, latitude, longitude, provider status, result count, and raw provider response metadata before matrix calculation.
 - The expected first matrix usage is below the current free monthly cap if the fixed dataset is calculated once with `TRAFFIC_UNAWARE` routing: about 93 geocoding requests and up to `93 * 93 = 8,649` route matrix elements when depot, customers, and self-pairs are included in rectangular API chunks.
 - Google documents Routes Compute Route Matrix Essentials with 10,000 free elements per month and paid usage after that. `TRAFFIC_AWARE_OPTIMAL` belongs to the Pro tier, which has a lower free cap and should be generated separately only when the project intentionally compares traffic-aware and traffic-unaware results.
