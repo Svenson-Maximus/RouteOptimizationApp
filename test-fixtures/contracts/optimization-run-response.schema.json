@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OptimizationRunResponse",
+  "type": "object",
+  "required": [
+    "status",
+    "weekday",
+    "matrixRunId",
+    "heuristics",
+    "eligibleCustomerCount",
+    "servedCustomerCount",
+    "droppedCustomerCount",
+    "routes"
+  ],
+  "properties": {
+    "status": { "type": "string" },
+    "weekday": { "type": "string" },
+    "matrixRunId": { "type": "string" },
+    "objectiveValue": { "type": ["integer", "number", "null"] },
+    "totalRouteDurationSeconds": { "type": ["integer", "null"] },
+    "totalDistanceMeters": { "type": ["integer", "null"] },
+    "eligibleCustomerCount": { "type": "integer" },
+    "servedCustomerCount": { "type": "integer" },
+    "droppedCustomerCount": { "type": "integer" },
+    "heuristics": {
+      "type": "object",
+      "required": ["firstSolutionStrategy", "localSearchMetaheuristic"],
+      "properties": {
+        "firstSolutionStrategy": { "type": "string" },
+        "localSearchMetaheuristic": { "type": "string" },
+        "randomSeed": { "type": ["integer", "null"] }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["vehicle", "capacityUnits", "stops", "customerStopCount"],
+        "properties": {
+          "vehicle": { "type": "string" },
+          "capacityUnits": { "type": "integer" },
+          "customerStopCount": { "type": "integer" },
+          "totalRouteSeconds": { "type": ["integer", "null"] },
+          "totalDistanceMeters": { "type": ["integer", "null"] },
+          "stops": { "type": "array" }
+        }
+      }
+    }
+  }
+}

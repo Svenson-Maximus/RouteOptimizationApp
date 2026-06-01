@@ -1,10 +1,12 @@
 package ch.hslu.fp2.customermaster.optimization;
 
 import ch.hslu.fp2.customermaster.api.dto.OptimizationRunRequest;
+import ch.hslu.fp2.customermaster.api.dto.OptimizationRunSummaryDto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -57,6 +60,9 @@ public class OptimizationRunService {
         int timeLimitSeconds = boundedInt(request.timeLimitSeconds(), 30, 1, 300);
         int droppedStopPenalty = boundedInt(request.droppedStopPenalty(), 100_000, 1, 10_000_000);
         boolean allowWaiting = Boolean.TRUE.equals(request.allowWaiting());
+        String firstSolutionStrategy = normalizeSolverToken(request.firstSolutionStrategy(), "SAVINGS");
+        String localSearchMetaheuristic = normalizeSolverToken(request.localSearchMetaheuristic(), "GUIDED_LOCAL_SEARCH");
+        Integer randomSeed = request.randomSeed();
 
         Path pythonPath = Path.of(pythonExecutable).toAbsolutePath().normalize();
         Path scriptPath = Path.of(solverScript).toAbsolutePath().normalize();
@@ -73,6 +79,14 @@ public class OptimizationRunService {
         command.add(Integer.toString(timeLimitSeconds));
         command.add("--dropped-stop-penalty");
         command.add(Integer.toString(droppedStopPenalty));
+        command.add("--first-solution-strategy");
+        command.add(firstSolutionStrategy);
+        command.add("--local-search-metaheuristic");
+        command.add(localSearchMetaheuristic);
+        if (randomSeed != null) {
+            command.add("--random-seed");
+            command.add(Integer.toString(randomSeed));
+        }
         if (allowWaiting) {
             command.add("--allow-waiting");
         }
@@ -95,13 +109,81 @@ public class OptimizationRunService {
                         "Optimization solver failed: " + firstNonBlank(error, output)
                 );
             }
-            return objectMapper.readTree(output);
+            JsonNode result = objectMapper.readTree(output);
+            if (isCompleteRun(result)) {
+                persistRun(
+                        result,
+                        weekday,
+                        matrixRunId,
+                        timeLimitSeconds,
+                        droppedStopPenalty,
+                        allowWaiting,
+                        firstSolutionStrategy,
+                        localSearchMetaheuristic,
+                        randomSeed
+                );
+            }
+            return result;
         } catch (IOException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not run optimization solver", ex);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Optimization solver was interrupted", ex);
         }
+    }
+
+    public List<OptimizationRunSummaryDto> findRecentRuns(String weekday, int limit) {
+        String normalizedWeekday = normalizeWeekday(weekday);
+        int boundedLimit = Math.max(1, Math.min(limit, 20));
+        String sql = """
+                SELECT id,
+                       created_at,
+                       weekday,
+                       matrix_run_id,
+                       status,
+                       objective_value,
+                       eligible_customer_count,
+                       served_customer_count,
+                       dropped_customer_count,
+                       vehicles_used,
+                       total_return_duration_seconds,
+                       total_route_duration_seconds,
+                       total_distance_meters,
+                       time_limit_seconds,
+                       dropped_stop_penalty,
+                       allow_waiting,
+                       first_solution_strategy,
+                       local_search_metaheuristic,
+                       random_seed
+                FROM optimization_runs
+                WHERE weekday = :weekday
+                  AND dropped_customer_count = 0
+                ORDER BY created_at DESC
+                LIMIT :limit
+                """;
+
+        return jdbc.query(sql, Map.of("weekday", normalizedWeekday, "limit", boundedLimit), (rs, __) ->
+                new OptimizationRunSummaryDto(
+                        rs.getObject("id", UUID.class),
+                        rs.getTimestamp("created_at").toInstant(),
+                        rs.getString("weekday"),
+                        rs.getObject("matrix_run_id", UUID.class),
+                        rs.getString("status"),
+                        rs.getObject("objective_value", Long.class),
+                        rs.getObject("eligible_customer_count", Integer.class),
+                        rs.getObject("served_customer_count", Integer.class),
+                        rs.getObject("dropped_customer_count", Integer.class),
+                        rs.getObject("vehicles_used", Integer.class),
+                        rs.getObject("total_return_duration_seconds", Integer.class),
+                        rs.getObject("total_route_duration_seconds", Integer.class),
+                        rs.getObject("total_distance_meters", Integer.class),
+                        rs.getObject("time_limit_seconds", Integer.class),
+                        rs.getObject("dropped_stop_penalty", Integer.class),
+                        rs.getBoolean("allow_waiting"),
+                        rs.getString("first_solution_strategy"),
+                        rs.getString("local_search_metaheuristic"),
+                        rs.getObject("random_seed", Integer.class)
+                ));
     }
 
     private UUID findLatestMatrixRunId() {
@@ -120,6 +202,64 @@ public class OptimizationRunService {
                 ));
     }
 
+    private void persistRun(
+            JsonNode result,
+            String weekday,
+            UUID matrixRunId,
+            int timeLimitSeconds,
+            int droppedStopPenalty,
+            boolean allowWaiting,
+            String firstSolutionStrategy,
+            String localSearchMetaheuristic,
+            Integer randomSeed
+    ) throws IOException {
+        String sql = """
+                INSERT INTO optimization_runs
+                    (weekday, matrix_run_id, status, objective_value, eligible_customer_count,
+                     served_customer_count, dropped_customer_count, vehicles_used,
+                     total_return_duration_seconds, total_route_duration_seconds,
+                     total_distance_meters, time_limit_seconds, dropped_stop_penalty,
+                     allow_waiting, first_solution_strategy, local_search_metaheuristic,
+                     random_seed, result_json)
+                VALUES
+                    (:weekday, :matrixRunId, :status, :objectiveValue, :eligibleCustomerCount,
+                     :servedCustomerCount, :droppedCustomerCount, :vehiclesUsed,
+                     :totalReturnDurationSeconds, :totalRouteDurationSeconds,
+                     :totalDistanceMeters, :timeLimitSeconds, :droppedStopPenalty,
+                     :allowWaiting, :firstSolutionStrategy, :localSearchMetaheuristic,
+                     :randomSeed, CAST(:resultJson AS jsonb))
+                """;
+
+        int vehiclesUsed = 0;
+        for (JsonNode route : result.path("routes")) {
+            if (route.path("customerStopCount").asInt(0) > 0) {
+                vehiclesUsed++;
+            }
+        }
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("weekday", weekday)
+                .addValue("matrixRunId", matrixRunId)
+                .addValue("status", result.path("status").asText("UNKNOWN"))
+                .addValue("objectiveValue", nullableLong(result, "objectiveValue"))
+                .addValue("eligibleCustomerCount", result.path("eligibleCustomerCount").asInt(0))
+                .addValue("servedCustomerCount", result.path("servedCustomerCount").asInt(0))
+                .addValue("droppedCustomerCount", result.path("droppedCustomerCount").asInt(0))
+                .addValue("vehiclesUsed", vehiclesUsed)
+                .addValue("totalReturnDurationSeconds", nullableInt(result, "totalReturnDurationSeconds"))
+                .addValue("totalRouteDurationSeconds", nullableInt(result, "totalRouteDurationSeconds"))
+                .addValue("totalDistanceMeters", nullableInt(result, "totalDistanceMeters"))
+                .addValue("timeLimitSeconds", timeLimitSeconds)
+                .addValue("droppedStopPenalty", droppedStopPenalty)
+                .addValue("allowWaiting", allowWaiting)
+                .addValue("firstSolutionStrategy", firstSolutionStrategy)
+                .addValue("localSearchMetaheuristic", localSearchMetaheuristic)
+                .addValue("randomSeed", randomSeed)
+                .addValue("resultJson", objectMapper.writeValueAsString(result));
+
+        jdbc.update(sql, params);
+    }
+
     private static String normalizeWeekday(String value) {
         String weekday = value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
         if (!WEEKDAYS.contains(weekday)) {
@@ -134,6 +274,30 @@ public class OptimizationRunService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Value must be between " + min + " and " + max);
         }
         return resolved;
+    }
+
+    private static String normalizeSolverToken(String value, String defaultValue) {
+        if (value == null || value.isBlank()) {
+            return defaultValue;
+        }
+        return value.trim().toUpperCase(Locale.ROOT);
+    }
+
+    private static Integer nullableInt(JsonNode node, String fieldName) {
+        JsonNode value = node.path(fieldName);
+        return value.isNumber() ? value.asInt() : null;
+    }
+
+    private static Long nullableLong(JsonNode node, String fieldName) {
+        JsonNode value = node.path(fieldName);
+        return value.isNumber() ? value.asLong() : null;
+    }
+
+    private static boolean isCompleteRun(JsonNode result) {
+        return "OPTIMAL_OR_FEASIBLE".equals(result.path("status").asText())
+                && result.path("eligibleCustomerCount").isInt()
+                && result.path("servedCustomerCount").asInt(-1) == result.path("eligibleCustomerCount").asInt()
+                && result.path("droppedCustomerCount").asInt(-1) == 0;
     }
 
     private static CompletableFuture<String> readStream(java.io.InputStream stream) {

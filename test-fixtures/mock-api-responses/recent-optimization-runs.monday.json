@@ -1,0 +1,22 @@
+[
+  {
+    "id": "00000000-0000-0000-0000-000000000001",
+    "createdAt": "2026-06-01T13:45:40Z",
+    "weekday": "monday",
+    "matrixRunId": "100cabce-ef5d-4b9a-b089-25754d1a0381",
+    "status": "OPTIMAL_OR_FEASIBLE",
+    "objectiveValue": 41693,
+    "eligibleCustomerCount": 38,
+    "servedCustomerCount": 38,
+    "droppedCustomerCount": 0,
+    "vehiclesUsed": 2,
+    "totalRouteDurationSeconds": 42629,
+    "totalDistanceMeters": 426503,
+    "timeLimitSeconds": 30,
+    "droppedStopPenalty": 1000000,
+    "allowWaiting": true,
+    "firstSolutionStrategy": "SAVINGS",
+    "localSearchMetaheuristic": "GUIDED_LOCAL_SEARCH",
+    "randomSeed": null
+  }
+]

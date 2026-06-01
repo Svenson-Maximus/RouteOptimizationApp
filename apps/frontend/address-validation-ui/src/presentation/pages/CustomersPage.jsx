@@ -5,6 +5,19 @@ import {
 } from "../../application/usecases/getAllCustomersUseCase";
 import { StatusBadge } from "../components/StatusBadge";
 
+const DAY_CONFIG = [
+  ["monday", "Mon"],
+  ["tuesday", "Tue"],
+  ["wednesday", "Wed"],
+  ["thursday", "Thu"],
+  ["friday", "Fri"],
+  ["saturday", "Sat"],
+];
+
+function toInputTime(value) {
+  return value?.slice(0, 5) || "";
+}
+
 export function CustomersPage() {
   const [rows, setRows] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -49,6 +62,7 @@ export function CustomersPage() {
       row.city,
       row.postalCode,
       row.tourType,
+      row.deliveryAddressNote,
       row.deliveryNotes,
     ].some((value) => String(value || "").toLowerCase().includes(query)));
   }, [filter, rows, search]);
@@ -68,6 +82,18 @@ export function CustomersPage() {
       buildingNo: row.buildingNo || "",
       postalCode: row.postalCode || "",
       city: row.city || "",
+      deliveryAddressNote: row.deliveryAddressNote || "",
+      tourType: row.tourType || "",
+      timeWindowStart: toInputTime(row.timeWindowStart),
+      timeWindowEnd: toInputTime(row.timeWindowEnd),
+      serviceTimeMinutes: row.serviceTimeMinutes ?? 5,
+      deliveryNotes: row.deliveryNotes || "",
+      ...DAY_CONFIG.reduce((acc, [key]) => ({
+        ...acc,
+        [key]: Boolean(row[key]),
+        [`${key}DeliveryDemandUnits`]: row[`${key}DeliveryDemandUnits`] ?? 1,
+        [`${key}PickupDemandUnits`]: row[`${key}PickupDemandUnits`] ?? 0,
+      }), {}),
     });
   };
 
@@ -80,7 +106,15 @@ export function CustomersPage() {
     if (!draft) return;
     setSaving(true);
     try {
-      const updated = await updateCustomerAddressUseCase(row.id, draft);
+      const payload = {
+        ...draft,
+        serviceTimeMinutes: toNumber(draft.serviceTimeMinutes, 5),
+      };
+      DAY_CONFIG.forEach(([key]) => {
+        payload[`${key}DeliveryDemandUnits`] = toNumber(draft[`${key}DeliveryDemandUnits`], 0);
+        payload[`${key}PickupDemandUnits`] = toNumber(draft[`${key}PickupDemandUnits`], 0);
+      });
+      const updated = await updateCustomerAddressUseCase(row.id, payload);
       setRows((items) => items.map((item) => (item.id === row.id ? updated : item)));
       cancelEdit();
     } finally {
@@ -103,6 +137,21 @@ export function CustomersPage() {
     ["Fri", row.friday],
     ["Sat", row.saturday],
   ].filter(([, active]) => active).map(([label]) => label).join(", ") || "-";
+
+  const formatDemand = (row, key) => {
+    const delivery = row[`${key}DeliveryDemandUnits`] ?? 0;
+    const pickup = row[`${key}PickupDemandUnits`] ?? 0;
+    return `${delivery} out / ${pickup} back`;
+  };
+
+  const setDraftValue = (key, value) => {
+    setDraft((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const toNumber = (value, fallback) => {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+  };
 
   return (
     <section>
@@ -158,6 +207,7 @@ export function CustomersPage() {
                 <span>Delivery Location Review</span>
                 {row.needsDeliveryAddressReview ? row.deliveryAddressReviewReason || "Required" : "No"}
               </p>
+              <p><span>Delivery Address Note</span>{row.deliveryAddressNote || "-"}</p>
               <p><span>Street</span>{row.street || "-"}</p>
               <p><span>Building No</span>{row.buildingNo || "-"}</p>
               <p><span>City</span>{row.city || "-"}</p>
@@ -167,6 +217,12 @@ export function CustomersPage() {
               <p><span>Raw Time Window</span>{formatWindow(row.rawTimeWindowStart, row.rawTimeWindowEnd)}</p>
               <p><span>Service Time</span>{row.serviceTimeMinutes ? `${row.serviceTimeMinutes} min` : "-"}</p>
               <p><span>Delivery Days</span>{formatDays(row)}</p>
+              <p><span>Mon Demand</span>{formatDemand(row, "monday")}</p>
+              <p><span>Tue Demand</span>{formatDemand(row, "tuesday")}</p>
+              <p><span>Wed Demand</span>{formatDemand(row, "wednesday")}</p>
+              <p><span>Thu Demand</span>{formatDemand(row, "thursday")}</p>
+              <p><span>Fri Demand</span>{formatDemand(row, "friday")}</p>
+              <p><span>Sat Demand</span>{formatDemand(row, "saturday")}</p>
               <p><span>Time Window Note</span>{row.timeWindowNormalizationNote || "-"}</p>
               <p><span>Note</span>{row.deliveryNotes || "-"}</p>
             </div>
@@ -206,6 +262,86 @@ export function CustomersPage() {
                     <input
                       value={draft.city}
                       onChange={(e) => setDraft((prev) => ({ ...prev, city: e.target.value }))}
+                    />
+                  </label>
+                  <label>
+                    Delivery Address Note
+                    <textarea
+                      value={draft.deliveryAddressNote}
+                      onChange={(e) => setDraftValue("deliveryAddressNote", e.target.value)}
+                    />
+                  </label>
+                  <div className="edit-subgrid">
+                    <label>
+                      Tour Type
+                      <input
+                        value={draft.tourType}
+                        onChange={(e) => setDraftValue("tourType", e.target.value)}
+                      />
+                    </label>
+                    <label>
+                      Service Time Minutes
+                      <input
+                        type="number"
+                        min="0"
+                        value={draft.serviceTimeMinutes}
+                        onChange={(e) => setDraftValue("serviceTimeMinutes", e.target.value)}
+                      />
+                    </label>
+                    <label>
+                      Time Window Start
+                      <input
+                        type="time"
+                        value={draft.timeWindowStart}
+                        onChange={(e) => setDraftValue("timeWindowStart", e.target.value)}
+                      />
+                    </label>
+                    <label>
+                      Time Window End
+                      <input
+                        type="time"
+                        value={draft.timeWindowEnd}
+                        onChange={(e) => setDraftValue("timeWindowEnd", e.target.value)}
+                      />
+                    </label>
+                  </div>
+                  <div className="day-demand-editor">
+                    {DAY_CONFIG.map(([key, label]) => (
+                      <div key={key} className="day-demand-row">
+                        <label className="toggle-row">
+                          <input
+                            type="checkbox"
+                            checked={draft[key]}
+                            onChange={(e) => setDraftValue(key, e.target.checked)}
+                          />
+                          {label}
+                        </label>
+                        <label>
+                          Deliver
+                          <input
+                            type="number"
+                            min="0"
+                            value={draft[`${key}DeliveryDemandUnits`]}
+                            onChange={(e) => setDraftValue(`${key}DeliveryDemandUnits`, e.target.value)}
+                          />
+                        </label>
+                        <label>
+                          Pickup
+                          <input
+                            type="number"
+                            min="0"
+                            value={draft[`${key}PickupDemandUnits`]}
+                            onChange={(e) => setDraftValue(`${key}PickupDemandUnits`, e.target.value)}
+                          />
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <label>
+                    Delivery Profile Note
+                    <textarea
+                      value={draft.deliveryNotes}
+                      onChange={(e) => setDraftValue("deliveryNotes", e.target.value)}
                     />
                   </label>
                   <div className="inline-actions">

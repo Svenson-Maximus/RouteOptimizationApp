@@ -7,6 +7,9 @@ public record OptimizationRunRequest(
         UUID matrixRunId,
         Integer timeLimitSeconds,
         Integer droppedStopPenalty,
-        Boolean allowWaiting
+        Boolean allowWaiting,
+        String firstSolutionStrategy,
+        String localSearchMetaheuristic,
+        Integer randomSeed
 ) {
 }

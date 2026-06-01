@@ -13,6 +13,7 @@ public record CustomerRowDto(
         boolean primaryDelivery,
         boolean needsDeliveryAddressReview,
         String deliveryAddressReviewReason,
+        String deliveryAddressNote,
         String validationStatus,
         String tourType,
         String timeWindowStart,
@@ -27,6 +28,18 @@ public record CustomerRowDto(
         boolean thursday,
         boolean friday,
         boolean saturday,
+        Integer mondayDeliveryDemandUnits,
+        Integer mondayPickupDemandUnits,
+        Integer tuesdayDeliveryDemandUnits,
+        Integer tuesdayPickupDemandUnits,
+        Integer wednesdayDeliveryDemandUnits,
+        Integer wednesdayPickupDemandUnits,
+        Integer thursdayDeliveryDemandUnits,
+        Integer thursdayPickupDemandUnits,
+        Integer fridayDeliveryDemandUnits,
+        Integer fridayPickupDemandUnits,
+        Integer saturdayDeliveryDemandUnits,
+        Integer saturdayPickupDemandUnits,
         String deliveryNotes
 ) {
 }

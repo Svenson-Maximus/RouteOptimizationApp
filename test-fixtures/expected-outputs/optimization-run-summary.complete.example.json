@@ -1,0 +1,12 @@
+{
+  "weekday": "monday",
+  "status": "OPTIMAL_OR_FEASIBLE",
+  "droppedCustomerCount": 0,
+  "firstSolutionStrategy": "SAVINGS",
+  "localSearchMetaheuristic": "GUIDED_LOCAL_SEARCH",
+  "minimumExpectedFields": [
+    "totalRouteDurationSeconds",
+    "totalDistanceMeters",
+    "routes"
+  ]
+}

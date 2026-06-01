@@ -12,6 +12,7 @@
  * @property {boolean} primaryDelivery
  * @property {boolean} needsDeliveryAddressReview
  * @property {string | null} deliveryAddressReviewReason
+ * @property {string | null} deliveryAddressNote
  * @property {string} validationStatus
  * @property {string | null} tourType
  * @property {string | null} timeWindowStart
@@ -26,6 +27,18 @@
  * @property {boolean} thursday
  * @property {boolean} friday
  * @property {boolean} saturday
+ * @property {number | null} mondayDeliveryDemandUnits
+ * @property {number | null} mondayPickupDemandUnits
+ * @property {number | null} tuesdayDeliveryDemandUnits
+ * @property {number | null} tuesdayPickupDemandUnits
+ * @property {number | null} wednesdayDeliveryDemandUnits
+ * @property {number | null} wednesdayPickupDemandUnits
+ * @property {number | null} thursdayDeliveryDemandUnits
+ * @property {number | null} thursdayPickupDemandUnits
+ * @property {number | null} fridayDeliveryDemandUnits
+ * @property {number | null} fridayPickupDemandUnits
+ * @property {number | null} saturdayDeliveryDemandUnits
+ * @property {number | null} saturdayPickupDemandUnits
  * @property {string | null} deliveryNotes
  */
 

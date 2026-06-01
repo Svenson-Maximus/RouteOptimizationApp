@@ -1,0 +1,10 @@
+{
+  "weekday": "monday",
+  "matrixRunId": null,
+  "timeLimitSeconds": 30,
+  "droppedStopPenalty": 1000000,
+  "allowWaiting": true,
+  "firstSolutionStrategy": "SAVINGS",
+  "localSearchMetaheuristic": "GUIDED_LOCAL_SEARCH",
+  "randomSeed": null
+}

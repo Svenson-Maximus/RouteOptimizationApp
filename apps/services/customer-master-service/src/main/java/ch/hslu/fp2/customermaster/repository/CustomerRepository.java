@@ -38,6 +38,7 @@ public class CustomerRepository {
                                                                   AS needs_delivery_address_review,
                        COALESCE(a.delivery_address_review_reason, '')
                                                                   AS delivery_address_review_reason,
+                       COALESCE(a.delivery_note, '')              AS delivery_address_note,
                        COALESCE(a.validation_status, 'PENDING') AS validation_status,
                        COALESCE(dp.tour_type, '')               AS tour_type,
                        COALESCE(dp.time_window_start::text, '') AS time_window_start,
@@ -55,6 +56,30 @@ public class CustomerRepository {
                        COALESCE(dp.thursday, FALSE)              AS thursday,
                        COALESCE(dp.friday, FALSE)                AS friday,
                        COALESCE(dp.saturday, FALSE)              AS saturday,
+                       COALESCE(dp.monday_delivery_demand_units, 1)
+                                                                  AS monday_delivery_demand_units,
+                       COALESCE(dp.monday_pickup_demand_units, 0)
+                                                                  AS monday_pickup_demand_units,
+                       COALESCE(dp.tuesday_delivery_demand_units, 1)
+                                                                  AS tuesday_delivery_demand_units,
+                       COALESCE(dp.tuesday_pickup_demand_units, 0)
+                                                                  AS tuesday_pickup_demand_units,
+                       COALESCE(dp.wednesday_delivery_demand_units, 1)
+                                                                  AS wednesday_delivery_demand_units,
+                       COALESCE(dp.wednesday_pickup_demand_units, 0)
+                                                                  AS wednesday_pickup_demand_units,
+                       COALESCE(dp.thursday_delivery_demand_units, 1)
+                                                                  AS thursday_delivery_demand_units,
+                       COALESCE(dp.thursday_pickup_demand_units, 0)
+                                                                  AS thursday_pickup_demand_units,
+                       COALESCE(dp.friday_delivery_demand_units, 1)
+                                                                  AS friday_delivery_demand_units,
+                       COALESCE(dp.friday_pickup_demand_units, 0)
+                                                                  AS friday_pickup_demand_units,
+                       COALESCE(dp.saturday_delivery_demand_units, 1)
+                                                                  AS saturday_delivery_demand_units,
+                       COALESCE(dp.saturday_pickup_demand_units, 0)
+                                                                  AS saturday_pickup_demand_units,
                        COALESCE(dp.delivery_notes, '')          AS delivery_notes
                 FROM customers c
                 JOIN customer_addresses a ON a.customer_id = c.id
@@ -77,6 +102,7 @@ public class CustomerRepository {
                 rs.getBoolean("is_primary_delivery"),
                 rs.getBoolean("needs_delivery_address_review"),
                 blankToNull(rs.getString("delivery_address_review_reason")),
+                blankToNull(rs.getString("delivery_address_note")),
                 rs.getString("validation_status"),
                 blankToNull(rs.getString("tour_type")),
                 blankToNull(rs.getString("time_window_start")),
@@ -91,6 +117,18 @@ public class CustomerRepository {
                 rs.getBoolean("thursday"),
                 rs.getBoolean("friday"),
                 rs.getBoolean("saturday"),
+                rs.getObject("monday_delivery_demand_units", Integer.class),
+                rs.getObject("monday_pickup_demand_units", Integer.class),
+                rs.getObject("tuesday_delivery_demand_units", Integer.class),
+                rs.getObject("tuesday_pickup_demand_units", Integer.class),
+                rs.getObject("wednesday_delivery_demand_units", Integer.class),
+                rs.getObject("wednesday_pickup_demand_units", Integer.class),
+                rs.getObject("thursday_delivery_demand_units", Integer.class),
+                rs.getObject("thursday_pickup_demand_units", Integer.class),
+                rs.getObject("friday_delivery_demand_units", Integer.class),
+                rs.getObject("friday_pickup_demand_units", Integer.class),
+                rs.getObject("saturday_delivery_demand_units", Integer.class),
+                rs.getObject("saturday_pickup_demand_units", Integer.class),
                 blankToNull(rs.getString("delivery_notes"))
         ));
     }
@@ -197,6 +235,7 @@ public class CustomerRepository {
                     building_no = :buildingNo,
                     postal_code = :postalCode,
                     city = :city,
+                    delivery_note = :deliveryAddressNote,
                     validation_status = 'PENDING',
                     validation_source = 'UI_ADDRESS_EDIT',
                     validated_at = NULL,
@@ -213,14 +252,80 @@ public class CustomerRepository {
                 .addValue("buildingNo", nullableTrim(request.buildingNo()))
                 .addValue("postalCode", nullableTrim(request.postalCode()))
                 .addValue("city", nullableTrim(request.city()))
+                .addValue("deliveryAddressNote", nullableTrim(request.deliveryAddressNote()))
                 .addValue("updatedAt", nowTimestamp());
 
         jdbc.update(sql, params);
+        updateDeliveryProfile(customerId, request);
 
         return findAllCustomers().stream()
                 .filter(c -> customerId.toString().equals(c.id()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Customer not found after address update: " + customerId));
+    }
+
+    private void updateDeliveryProfile(UUID customerId, UpdateCustomerAddressRequest request) {
+        if (!hasDeliveryProfileUpdate(request)) {
+            return;
+        }
+
+        String sql = """
+                UPDATE customer_delivery_profiles
+                SET tour_type = :tourType,
+                    time_window_start = CAST(:timeWindowStart AS time),
+                    time_window_end = CAST(:timeWindowEnd AS time),
+                    service_time_minutes = :serviceTimeMinutes,
+                    monday = :monday,
+                    tuesday = :tuesday,
+                    wednesday = :wednesday,
+                    thursday = :thursday,
+                    friday = :friday,
+                    saturday = :saturday,
+                    monday_delivery_demand_units = :mondayDeliveryDemandUnits,
+                    monday_pickup_demand_units = :mondayPickupDemandUnits,
+                    tuesday_delivery_demand_units = :tuesdayDeliveryDemandUnits,
+                    tuesday_pickup_demand_units = :tuesdayPickupDemandUnits,
+                    wednesday_delivery_demand_units = :wednesdayDeliveryDemandUnits,
+                    wednesday_pickup_demand_units = :wednesdayPickupDemandUnits,
+                    thursday_delivery_demand_units = :thursdayDeliveryDemandUnits,
+                    thursday_pickup_demand_units = :thursdayPickupDemandUnits,
+                    friday_delivery_demand_units = :fridayDeliveryDemandUnits,
+                    friday_pickup_demand_units = :fridayPickupDemandUnits,
+                    saturday_delivery_demand_units = :saturdayDeliveryDemandUnits,
+                    saturday_pickup_demand_units = :saturdayPickupDemandUnits,
+                    delivery_notes = :deliveryNotes,
+                    updated_at = :updatedAt
+                WHERE customer_id = :customerId
+                """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("customerId", customerId)
+                .addValue("tourType", nullableTrim(request.tourType()))
+                .addValue("timeWindowStart", nullableTrim(request.timeWindowStart()))
+                .addValue("timeWindowEnd", nullableTrim(request.timeWindowEnd()))
+                .addValue("serviceTimeMinutes", nonNegative(request.serviceTimeMinutes(), 5))
+                .addValue("monday", Boolean.TRUE.equals(request.monday()))
+                .addValue("tuesday", Boolean.TRUE.equals(request.tuesday()))
+                .addValue("wednesday", Boolean.TRUE.equals(request.wednesday()))
+                .addValue("thursday", Boolean.TRUE.equals(request.thursday()))
+                .addValue("friday", Boolean.TRUE.equals(request.friday()))
+                .addValue("saturday", Boolean.TRUE.equals(request.saturday()))
+                .addValue("mondayDeliveryDemandUnits", nonNegative(request.mondayDeliveryDemandUnits(), 1))
+                .addValue("mondayPickupDemandUnits", nonNegative(request.mondayPickupDemandUnits(), 0))
+                .addValue("tuesdayDeliveryDemandUnits", nonNegative(request.tuesdayDeliveryDemandUnits(), 1))
+                .addValue("tuesdayPickupDemandUnits", nonNegative(request.tuesdayPickupDemandUnits(), 0))
+                .addValue("wednesdayDeliveryDemandUnits", nonNegative(request.wednesdayDeliveryDemandUnits(), 1))
+                .addValue("wednesdayPickupDemandUnits", nonNegative(request.wednesdayPickupDemandUnits(), 0))
+                .addValue("thursdayDeliveryDemandUnits", nonNegative(request.thursdayDeliveryDemandUnits(), 1))
+                .addValue("thursdayPickupDemandUnits", nonNegative(request.thursdayPickupDemandUnits(), 0))
+                .addValue("fridayDeliveryDemandUnits", nonNegative(request.fridayDeliveryDemandUnits(), 1))
+                .addValue("fridayPickupDemandUnits", nonNegative(request.fridayPickupDemandUnits(), 0))
+                .addValue("saturdayDeliveryDemandUnits", nonNegative(request.saturdayDeliveryDemandUnits(), 1))
+                .addValue("saturdayPickupDemandUnits", nonNegative(request.saturdayPickupDemandUnits(), 0))
+                .addValue("deliveryNotes", nullableTrim(request.deliveryNotes()))
+                .addValue("updatedAt", nowTimestamp());
+
+        jdbc.update(sql, params);
     }
 
     private static String blankToNull(String value) {
@@ -229,6 +334,39 @@ public class CustomerRepository {
 
     private static String nullableTrim(String value) {
         return value == null || value.isBlank() ? null : value.trim();
+    }
+
+    private static int nonNegative(Integer value, int defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+        return Math.max(0, value);
+    }
+
+    private static boolean hasDeliveryProfileUpdate(UpdateCustomerAddressRequest request) {
+        return request.tourType() != null
+                || request.timeWindowStart() != null
+                || request.timeWindowEnd() != null
+                || request.serviceTimeMinutes() != null
+                || request.monday() != null
+                || request.tuesday() != null
+                || request.wednesday() != null
+                || request.thursday() != null
+                || request.friday() != null
+                || request.saturday() != null
+                || request.mondayDeliveryDemandUnits() != null
+                || request.mondayPickupDemandUnits() != null
+                || request.tuesdayDeliveryDemandUnits() != null
+                || request.tuesdayPickupDemandUnits() != null
+                || request.wednesdayDeliveryDemandUnits() != null
+                || request.wednesdayPickupDemandUnits() != null
+                || request.thursdayDeliveryDemandUnits() != null
+                || request.thursdayPickupDemandUnits() != null
+                || request.fridayDeliveryDemandUnits() != null
+                || request.fridayPickupDemandUnits() != null
+                || request.saturdayDeliveryDemandUnits() != null
+                || request.saturdayPickupDemandUnits() != null
+                || request.deliveryNotes() != null;
     }
 
     private static Timestamp nowTimestamp() {
