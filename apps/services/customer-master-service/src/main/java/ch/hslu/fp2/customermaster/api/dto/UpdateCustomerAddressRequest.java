@@ -6,6 +6,8 @@ public record UpdateCustomerAddressRequest(
         String buildingNo,
         String postalCode,
         String city,
+        Boolean needsDeliveryAddressReview,
+        String deliveryAddressReviewReason,
         String deliveryAddressNote,
         String tourType,
         String timeWindowStart,

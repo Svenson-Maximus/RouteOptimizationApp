@@ -82,6 +82,8 @@ export function CustomersPage() {
       buildingNo: row.buildingNo || "",
       postalCode: row.postalCode || "",
       city: row.city || "",
+      needsDeliveryAddressReview: Boolean(row.needsDeliveryAddressReview),
+      deliveryAddressReviewReason: row.deliveryAddressReviewReason || "",
       deliveryAddressNote: row.deliveryAddressNote || "",
       tourType: row.tourType || "",
       timeWindowStart: toInputTime(row.timeWindowStart),
@@ -109,6 +111,10 @@ export function CustomersPage() {
       const payload = {
         ...draft,
         serviceTimeMinutes: toNumber(draft.serviceTimeMinutes, 5),
+        needsDeliveryAddressReview: Boolean(draft.needsDeliveryAddressReview),
+        deliveryAddressReviewReason: draft.needsDeliveryAddressReview
+          ? draft.deliveryAddressReviewReason
+          : "",
       };
       DAY_CONFIG.forEach(([key]) => {
         payload[`${key}DeliveryDemandUnits`] = toNumber(draft[`${key}DeliveryDemandUnits`], 0);
@@ -264,6 +270,33 @@ export function CustomersPage() {
                       onChange={(e) => setDraft((prev) => ({ ...prev, city: e.target.value }))}
                     />
                   </label>
+                  <div className="review-editor">
+                    <label className="toggle-row">
+                      <input
+                        type="checkbox"
+                        checked={draft.needsDeliveryAddressReview}
+                        onChange={(e) => {
+                          setDraft((prev) => ({
+                            ...prev,
+                            needsDeliveryAddressReview: e.target.checked,
+                            deliveryAddressReviewReason: e.target.checked
+                              ? prev.deliveryAddressReviewReason
+                              : "",
+                          }));
+                        }}
+                      />
+                      Keep in location review
+                    </label>
+                    {draft.needsDeliveryAddressReview && (
+                      <label>
+                        Review Reason
+                        <textarea
+                          value={draft.deliveryAddressReviewReason}
+                          onChange={(e) => setDraftValue("deliveryAddressReviewReason", e.target.value)}
+                        />
+                      </label>
+                    )}
+                  </div>
                   <label>
                     Delivery Address Note
                     <textarea

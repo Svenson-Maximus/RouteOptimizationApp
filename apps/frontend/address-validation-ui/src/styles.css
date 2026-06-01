@@ -346,6 +346,15 @@ body {
   resize: vertical;
 }
 
+.review-editor {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  background: #f8fbf9;
+}
+
 .edit-subgrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(140px, 1fr));

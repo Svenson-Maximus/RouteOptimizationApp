@@ -235,6 +235,15 @@ public class CustomerRepository {
                     building_no = :buildingNo,
                     postal_code = :postalCode,
                     city = :city,
+                    needs_delivery_address_review = CASE
+                        WHEN :reviewFlagProvided THEN :needsDeliveryAddressReview
+                        ELSE needs_delivery_address_review
+                    END,
+                    delivery_address_review_reason = CASE
+                        WHEN NOT :reviewFlagProvided THEN delivery_address_review_reason
+                        WHEN :needsDeliveryAddressReview THEN :deliveryAddressReviewReason
+                        ELSE NULL
+                    END,
                     delivery_note = :deliveryAddressNote,
                     validation_status = 'PENDING',
                     validation_source = 'UI_ADDRESS_EDIT',
@@ -252,6 +261,9 @@ public class CustomerRepository {
                 .addValue("buildingNo", nullableTrim(request.buildingNo()))
                 .addValue("postalCode", nullableTrim(request.postalCode()))
                 .addValue("city", nullableTrim(request.city()))
+                .addValue("reviewFlagProvided", request.needsDeliveryAddressReview() != null)
+                .addValue("needsDeliveryAddressReview", Boolean.TRUE.equals(request.needsDeliveryAddressReview()))
+                .addValue("deliveryAddressReviewReason", nullableTrim(request.deliveryAddressReviewReason()))
                 .addValue("deliveryAddressNote", nullableTrim(request.deliveryAddressNote()))
                 .addValue("updatedAt", nowTimestamp());
 
