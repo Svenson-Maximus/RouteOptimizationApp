@@ -378,15 +378,8 @@ pytest
 | CVRPTW | Capacitated Vehicle Routing Problem with Time Windows. |
 | Seed | Search parameter used to improve reproducibility where solver behavior uses randomness. |
 
-## 15. Change and Review Policy
+## 15. Maintenance
 
-This document is reviewed when:
+This test concept is maintained together with the source code. Since this is a one-person project, no formal review workflow is required.
 
-- A new major component is added.
-- API contracts change.
-- The optimizer model changes.
-- CI stages change.
-- A professor-review finding affects testing.
-- A production-like defect reveals a gap in the test strategy.
-
-In an agile project context, the document is not frozen. It is updated together with the code and reviewed as part of normal project progress.
+The document is updated when the architecture, test scope, CI pipeline, optimizer model, or relevant project risks change. Supervisor feedback is incorporated when it affects testing scope or quality expectations.
